@@ -1,0 +1,101 @@
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+
+<%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
+  <%= label_tag 'File:' %>
+  <%= file_field_tag :upload %>
+  <%= label_tag 'Sender Email:' %>
+  <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off"}  %>
+  <%= label_tag 'Receiver Email:' %>
+  <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off"} %>
+  <%= submit_tag 'Send' %>
+  <button type="button" class="cancel" name="cancel">Cancel</button>
+<% end %>
+
+<div id="progress-bar">
+  <div id="progress"></div>
+</div>
+
+<script>
+  var files = [];
+    var reuest_var = null;
+    $('#fileupload').fileupload({    
+      dataType: 'json',
+      url: 'uploads/chunk_create',
+      maxChunkSize: 25000000,
+      add: function(e, data) {
+        $.each(data.files, function(index, file) {
+          $.ajax({
+            method: 'post',
+            dataType: 'json',
+            data: { filename: file.name, file_size: file.size},
+            success: function(res) {
+              data.formData = res;
+              files.push(data);
+            },
+            error: function(jqXHR, exception) {
+              if (jqXHR.status === 0) {
+                  alert('Not connect.\n Verify Network.');
+              } else if (jqXHR.status == 404) {
+                  alert('Requested page not found. [404]');
+              } else if (jqXHR.status == 500) {
+                  alert('Internal Server Error [500].');
+              } else if (exception === 'parsererror') {
+                  alert('Requested JSON parse failed.');
+              } else if (exception === 'timeout') {
+                  alert('Time out error.');
+              } else if (exception === 'abort') {
+                  alert('Ajax request aborted.');
+              } else {
+                  alert('Uncaught Error.\n' + jqXHR.responseText);
+              }
+            }
+          });
+        });
+      },
+      progressall: function(e, data) {
+        var done = parseInt(data.loaded * 100) / data.total
+        $('#progress').css({ width: done + '%'})
+      },
+      success: function(res) {
+      },
+      error: function(jqXHR, exception) {
+        if (jqXHR.status === 0) {
+            alert('Not connect.\n Verify Network.');
+        } else if (jqXHR.status == 404) {
+            alert('Requested page not found. [404]');
+        } else if (jqXHR.status == 500) {
+            alert('Internal Server Error [500].');
+        } else if (exception === 'parsererror') {
+            alert('Requested JSON parse failed.');
+        } else if (exception === 'timeout') {
+            alert('Time out error.');
+        } else if (exception === 'abort') {
+            alert('Ajax request aborted.');
+        } else {
+            alert('Uncaught Error.\n' + jqXHR.responseText);
+        }
+      }
+    });
+  
+  $('button.cancel').click(function (e) {
+    request_var.abort();
+    alert("abortat");
+  });
+  
+  $('#fileupload').on('submit', function(e) {
+    e.preventDefault();
+    if (files.length < 1) return;
+    $.each(files, function(index, file) {
+      var sender = $('#sender_email').val();
+      var receiver = $('#send_to_email').val();
+      file.formData.sender_email = sender;
+      file.formData.receiver_email = receiver;
+      request_var = file.submit();
+    });
+    files = [];
+  });
+</script>
