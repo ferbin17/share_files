@@ -106,6 +106,9 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  config.hosts << "localhost"
+  config.hosts << "share-files-app.herokuapp.com"
+  ENV["SHARE_FILE_DATABASE_PASSWORD"] = "iamaunited@18"
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
