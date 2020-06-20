@@ -30,6 +30,7 @@
         $.each(data.files, function(index, file) {
           $.ajax({
             method: 'post',
+            url: 'uploads',
             dataType: 'json',
             data: { filename: file.name, file_size: file.size},
             success: function(res) {
