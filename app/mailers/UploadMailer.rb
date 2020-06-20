@@ -1,5 +1,5 @@
 class UploadMailer < ApplicationMailer
-  default from: 'notifications@example.com'
+  default from: 'ferbinupworkprojects@gmail.com'
   
   def send_download_link
     @file = params[:file]
