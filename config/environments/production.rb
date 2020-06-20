@@ -66,7 +66,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
   host = 'https://share-files-app.herokuapp.com' #replace with your own url
-  ENV['ROOT_URL'] = hosts
+  ENV['ROOT_URL'] = host
   config.action_mailer.default_url_options = { host: host }
 
   # SMTP settings for gmail
