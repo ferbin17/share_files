@@ -59,7 +59,7 @@
   $('#fileupload').fileupload({    
     dataType: 'json',
     url: 'uploads/chunk_create',
-    maxChunkSize: 5000000,
+    maxChunkSize: 2500000,
     add: function(e, data) {
       $.each(data.files, function(index, file){
         var found = false;
@@ -89,7 +89,7 @@
     success: function(res) {
       total_uploaded_size = completed_upload_size + res.uploaded_size;
       var done = parseInt(total_uploaded_size * 100)/total_file_size;
-      var ind_done = parseInt((res.uploaded_size * 100)/res.file_size);
+      var ind_done = parseInt(res.uploaded_size * 100)/res.file_size;
       $('#progress-percent').html(done.toFixed(2) + '%');
       $('#progress').css({ width: done + '%'});
       var key = res.filename.slice(0, 5) + res.file_size.toString().slice(0, 5)
@@ -238,7 +238,7 @@
       file = obj.files[0]
       return (file.name != file_name && file.size != file_size);
     });
-    parent_div.parent().remove();
+    parent_div.remove();
   });
   
   function bytesToSize(bytes) {
