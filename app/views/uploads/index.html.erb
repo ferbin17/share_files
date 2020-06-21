@@ -5,79 +5,139 @@
 <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
 
 <%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
-  <%= label_tag 'File:' %>
-  <%= file_field_tag :upload %>
-  <%= label_tag 'Sender Email:' %>
-  <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off"}  %>
-  <%= label_tag 'Receiver Email:' %>
-  <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off"} %>
-  <%= submit_tag 'Send' %>
-  <button type="button" class="cancel" name="cancel">Cancel</button>
+  <div class="form-group">
+    <label for="SenderEmail">Sender email</label>
+    <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
+      class:"form-control" , placeholder: "Enter sender email" }  %>
+  </div>
+  <div class="form-group">
+    <label for="ReceiverEmail">Receiver email</label>
+    <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
+      class:"form-control" , placeholder: "Enter receiver email" }  %>
+  </div>
+  <div class="form-group">
+    <label for="FileUploader">File</label>
+    <%= file_field_tag :upload, id: "FileUploader", class:"form-control" %>
+  </div>
+  <div class="form-group" id="file-detail-holder">
+    <div id="file-detail-table">
+      <table>
+        <tr><th>Filename</th><th>File Size</th></tr>
+      </table>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= submit_tag 'Send', class: "btn btn-primary"  %>
+    <button type="button" class="cancel btn btn-secondary" name="cancel">Cancel</button>
+  </div>
 <% end %>
-
-<div id="progress-bar">
-  <div id="progress"></div>
+<div class="form-group">
+  <div id="progress-bar" class="progress">
+    <div id="progress" class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar"><span id="progress-percent"></span></div>
+  </div>
 </div>
 
 <script>
   var files = [];
-    var reuest_var = null;
-    $('#fileupload').fileupload({    
-      dataType: 'json',
-      url: 'uploads/chunk_create',
-      maxChunkSize: 1000000,
-      add: function(e, data) {
-        $.each(data.files, function(index, file) {
-          $.ajax({
-            method: 'post',
-            url: 'uploads',
-            dataType: 'json',
-            data: { filename: file.name, file_size: file.size},
-            success: function(res) {
-              data.formData = res;
-              files.push(data);
-            },
-            error: function(jqXHR, exception) {
-              if (jqXHR.status === 0) {
-                  alert('Not connect.\n Verify Network.');
-              } else if (jqXHR.status == 404) {
-                  alert('Requested page not found. [404]');
-              } else if (jqXHR.status == 500) {
-                  alert('Internal Server Error [500].');
-              } else if (exception === 'parsererror') {
-                  alert('Requested JSON parse failed.');
-              } else if (exception === 'timeout') {
-                  alert('Time out error.');
-              } else if (exception === 'abort') {
-                  alert('Ajax request aborted.');
-              } else {
-                  alert('Uncaught Error.\n' + jqXHR.responseText);
-              }
-            }
-          });
-        });
+  var new_files = [];
+  var reuest_var = null;
+  var total_file_size = 0;
+  var total_uploaded_size = 0;
+  var completed_upload_size = 0;
+  $('#fileupload').fileupload({    
+    dataType: 'json',
+    url: 'uploads/chunk_create',
+    maxChunkSize: 1000000,
+    add: function(e, data) {
+      file = data.files[0]
+      var found = false;
+      $.each(files, function(index, data_in_files){
+        $.each(data_in_files.files, function(index, sub_file){
+          if(file.name == sub_file.name && file.size == sub_file.size ){
+            found = true;
+          }
+        })
+      })
+      if(!found){
+        files.push(data);
+        construct_file_display(file)
+      }else{
+        console.log("duplicate")
+        // raise error
+      }
+      //   $.each(data.files, function(index, file) {
+      //     $.ajax({
+      //       method: 'post',
+      //       url: 'uploads',
+      //       dataType: 'json',
+      //       data: { filename: file.name, file_size: file.size},
+      //       success: function(res) {
+      //         data.formData = res;
+      //         single_file = data
+      //         // files.push(data);
+      //       },
+      //       error: function(jqXHR, exception) {
+      //         if (jqXHR.status === 0) {
+      //             alert('Not connect.\n Verify Network.');
+      //         } else if (jqXHR.status == 404) {
+      //             alert('Requested page not found. [404]');
+      //         } else if (jqXHR.status == 500) {
+      //             alert('Internal Server Error [500].');
+      //         } else if (exception === 'parsererror') {
+      //             alert('Requested JSON parse failed.');
+      //         } else if (exception === 'timeout') {
+      //             alert('Time out error.');
+      //         } else if (exception === 'abort') {
+      //             alert('Ajax request aborted.');
+      //         } else {
+      //             alert('Uncaught Error.\n' + jqXHR.responseText);
+      //         }
+      //       }
+      //     });
+      //   });
       },
       progressall: function(e, data) {
-        var done = parseInt(data.loaded * 100) / data.total
-        $('#progress').css({ width: done + '%'})
+        var done = parseInt(data.loaded * 100) / data.total;
+        if(done == 100){
+          $('button.cancel').hide();
+        }
+      //   $('#progress-percent').html(done.toFixed(2) + '%');
+      //   $('#progress').css({ width: done + '%'});
       },
       success: function(res) {
+        total_uploaded_size = completed_upload_size + res.uploaded_size
+        var done = parseInt(total_uploaded_size * 100)/total_file_size;
+        $('#progress-percent').html(done.toFixed(2) + '%');
+        $('#progress').css({ width: done + '%'});
+        if(res.file_size == res.uploaded_size){
+          completed_upload_size += res.file_size  
+        }
+        if(completed_upload_size == total_file_size){
+          alert("Upload complete");
+        }
       },
       error: function(jqXHR, exception) {
         if (jqXHR.status === 0) {
-            alert('Not connect.\n Verify Network.');
+          console.log("111");
+        //     alert('Not connect.\n Verify Network.');
         } else if (jqXHR.status == 404) {
-            alert('Requested page not found. [404]');
+          console.log("222");
+        //     alert('Requested page not found. [404]');
         } else if (jqXHR.status == 500) {
-            alert('Internal Server Error [500].');
+          console.log("333");
+        //     alert('Internal Server Error [500].');
         } else if (exception === 'parsererror') {
-            alert('Requested JSON parse failed.');
+          console.log("444");
+        //     alert('Requested JSON parse failed.');
         } else if (exception === 'timeout') {
-            alert('Time out error.');
+          console.log("555");
+        //     alert('Time out error.');
         } else if (exception === 'abort') {
-            alert('Ajax request aborted.');
+          console.log("666");
+        //     alert('Ajax request aborted.');
         } else {
-            alert('Uncaught Error.\n' + jqXHR.responseText);
+          console.log("777");
+        //     alert('Uncaught Error.\n' + jqXHR.responseText);
         }
       }
     });
@@ -89,14 +149,89 @@
   
   $('#fileupload').on('submit', function(e) {
     e.preventDefault();
-    if (files.length < 1) return;
-    $.each(files, function(index, file) {
-      var sender = $('#sender_email').val();
-      var receiver = $('#send_to_email').val();
-      file.formData.sender_email = sender;
-      file.formData.receiver_email = receiver;
-      request_var = file.submit();
-    });
-    files = [];
+    if(files.length < 1) return;
+    var sender = $('#SenderEmail').val();
+    var receiver = $('#ReceiverEmail').val();
+    if(sender == "" || receiver == ""){
+      // plot error
+      return;
+    };
+    $.each(files, function(index, file){
+      total_file_size += file.files[0].size
+    })
+    $.ajax({
+      method: 'post',
+      url: 'uploads/set_users',
+      dataType: 'json',
+      data: { sender_email: sender, receiver_email: receiver, total_files: files.length, total_file_size: total_file_size},
+      success: function(res) {
+        setup_upload(res.id)
+      },
+      error: function(jqXHR, exception){
+        // console.log(jqXHR);
+      }
+    })    
   });
+  
+  function setup_upload(file_sender){
+    $.each(files, function(index, data_file) {
+      var file = data_file.files[0];
+      $.ajax({
+        method: 'post',
+        url: 'uploads',
+        dataType: 'json',
+        data: { filename: file.name, file_size: file.size, file_sender_id: file_sender},
+        success: function(res) {
+          data_file.formData = res;
+          new_files.push(data_file)
+          if(new_files.length == files.length){
+            trigger_upload();
+          }
+        },
+        error: function(jqXHR, exception) {
+          if (jqXHR.status === 0) {
+              alert('Not connect.\n Verify Network.');
+          } else if (jqXHR.status == 404) {
+              alert('Requested page not found. [404]');
+          } else if (jqXHR.status == 500) {
+              alert('Internal Server Error [500].');
+          } else if (exception === 'parsererror') {
+              alert('Requested JSON parse failed.');
+          } else if (exception === 'timeout') {
+              alert('Time out error.');
+          } else if (exception === 'abort') {
+              alert('Ajax request aborted.');
+          } else {
+              alert('Uncaught Error.\n' + jqXHR.responseText);
+          }
+        }
+      });
+    });
+  }
+  
+  function trigger_upload(){
+    $.each(new_files, function(index, file){
+      request_var = file.submit();
+      $('button.cancel').show();
+    })
+    new_files = null;
+    files = null;
+  }
+  
+  function construct_file_display(file){
+    $('#file-detail-holder').show();
+    string = "<tr><td>" + file.name + "</td><td>" + file.size + "</td>";
+    $('#file-detail-table table tr:last').after(string);
+  }
 </script>
+<style>
+  .cancel{
+    display: none;
+  }
+  #file-detail-holder{
+    display: none;
+  }
+  #file-detail-table{
+    background-color: lightgrey;
+  }
+</style>

@@ -9,4 +9,8 @@ class UploadMailer < ApplicationMailer
     @file.update(mail_sent: true)
     mail(to: @receiver.email_id, subject: 'ShareFile download link')
   end
+  
+  def send_success_mail
+    
+  end
 end
