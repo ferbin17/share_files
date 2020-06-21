@@ -1,3 +1,50 @@
 // Place all the styles related to the Uploads controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.card .card-header{
+  padding: 0rem 1rem;
+  border-bottom: none;
+}
+
+.card .card-body{
+  padding: 0.1rem 1rem;
+}
+
+#file-detail-div .card{
+  margin: 0.1rem;
+}
+
+.filename{
+  float: left;
+}
+
+.removefile{
+  float: right;
+  display: none;
+}
+
+.removefile:hover{
+  cursor: pointer;
+}
+
+#progress-bar{
+  display: none;
+}
+.cancel{
+  display: none;
+}
+#file-detail-holder{
+  display: none;
+}
+
+#file-detail-div{
+  padding: 0.2rem !important;
+}
+
+.ind_cancel{
+  display: none;
+}
+
+.ind_cancel:hover{
+  cursor: pointer;
+}

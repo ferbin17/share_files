@@ -6,11 +6,7 @@ class CreateUploads < ActiveRecord::Migration[6.0]
       t.integer :file_size
       t.string :path
       t.integer :uploaded_size, default: 0
-      t.datetime :expiry_date
-      t.boolean :mail_sent, default: false
-      t.integer :sender_id
-      t.integer :receiver_id 
-      t.boolean :is_expired
+      t.integer :file_sender_id, :integer
       t.timestamps
     end
   end

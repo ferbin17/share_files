@@ -1,149 +1,140 @@
-<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
-<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
-<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<div class="row">
+  <div class="col">
+  </div>
+  <div class="col">
+    <%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
+      <div class="form-group">
+        <label for="SenderEmail">Sender email</label>
+        <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
+          class:"form-control" , placeholder: "Enter sender email" }  %>
+      </div>
+      <div class="form-group">
+        <label for="ReceiverEmail">Receiver email</label>
+        <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
+          class:"form-control" , placeholder: "Enter receiver email" }  %>
+      </div>
+      <div class="form-group">
+        <label for="FileUploader" class="">File</label>
+        <%= file_field_tag :upload, id: "FileUploader", class:"form-control", multiple: true%>
+      </div>
+      <div class="form-group" id="file-detail-holder">
+        <div class="card bg-dark mb-3">
+          <div class="card-header text-white">Files</div>
+          <div id="file-detail-div" class="card-body"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= submit_tag 'Send', class: "btn btn-primary"  %>
+      </div>
+    <% end %>
 
-<%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
-  <div class="form-group">
-    <label for="SenderEmail">Sender email</label>
-    <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
-      class:"form-control" , placeholder: "Enter sender email" }  %>
-  </div>
-  <div class="form-group">
-    <label for="ReceiverEmail">Receiver email</label>
-    <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
-      class:"form-control" , placeholder: "Enter receiver email" }  %>
-  </div>
-  <div class="form-group">
-    <label for="FileUploader">File</label>
-    <%= file_field_tag :upload, id: "FileUploader", class:"form-control" %>
-  </div>
-  <div class="form-group" id="file-detail-holder">
-    <div id="file-detail-table">
-      <table>
-        <tr><th>Filename</th><th>File Size</th></tr>
-      </table>
+    <div class="row">
+      <div class="col">
+        <div id="progress-bar" class="progress">
+          <div id="progress" class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar">
+            <span id="progress-percent"></span>
+          </div>
+        </div>
+      </div>  
+      <div class="col col-lg-2">
+        <button type="button" class="cancel btn btn-secondary" name="cancel">Cancel</button>
+      </div>
     </div>
   </div>
-  <div class="form-group">
-    <%= submit_tag 'Send', class: "btn btn-primary"  %>
-    <button type="button" class="cancel btn btn-secondary" name="cancel">Cancel</button>
-  </div>
-<% end %>
-<div class="form-group">
-  <div id="progress-bar" class="progress">
-    <div id="progress" class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar"><span id="progress-percent"></span></div>
+  <div class="col">
   </div>
 </div>
+
 
 <script>
   var files = [];
   var new_files = [];
-  var reuest_var = null;
+  var requests = {};
+  var file_sizes = {};
   var total_file_size = 0;
   var total_uploaded_size = 0;
   var completed_upload_size = 0;
+  var upload_started = false;
   $('#fileupload').fileupload({    
     dataType: 'json',
     url: 'uploads/chunk_create',
     maxChunkSize: 1000000,
     add: function(e, data) {
-      file = data.files[0]
-      var found = false;
-      $.each(files, function(index, data_in_files){
-        $.each(data_in_files.files, function(index, sub_file){
-          if(file.name == sub_file.name && file.size == sub_file.size ){
-            found = true;
-          }
+      $.each(data.files, function(index, file){
+        var found = false;
+        $.each(files, function(index, data_in_files){
+          $.each(data_in_files.files, function(index, sub_file){
+            if(file.name == sub_file.name && file.size == sub_file.size ){
+              found = true;
+            }
+          })
         })
-      })
-      if(!found){
-        files.push(data);
-        construct_file_display(file)
-      }else{
-        console.log("duplicate")
-        // raise error
+        if(!found){
+          files.push(data);
+          construct_file_display(file)
+        }else{
+          console.log("duplicate")
+          // raise errorutton.cancel').hide();
+        }
+      });
+    },
+    progressall: function(e, data) {
+      total_uploaded_size = completed_upload_size + data.loaded
+      var done = parseInt(total_uploaded_size * 100)/total_file_size;
+      if(Math.round(done) == 100){
+        $('button.cancel').hide();
       }
-      //   $.each(data.files, function(index, file) {
-      //     $.ajax({
-      //       method: 'post',
-      //       url: 'uploads',
-      //       dataType: 'json',
-      //       data: { filename: file.name, file_size: file.size},
-      //       success: function(res) {
-      //         data.formData = res;
-      //         single_file = data
-      //         // files.push(data);
-      //       },
-      //       error: function(jqXHR, exception) {
-      //         if (jqXHR.status === 0) {
-      //             alert('Not connect.\n Verify Network.');
-      //         } else if (jqXHR.status == 404) {
-      //             alert('Requested page not found. [404]');
-      //         } else if (jqXHR.status == 500) {
-      //             alert('Internal Server Error [500].');
-      //         } else if (exception === 'parsererror') {
-      //             alert('Requested JSON parse failed.');
-      //         } else if (exception === 'timeout') {
-      //             alert('Time out error.');
-      //         } else if (exception === 'abort') {
-      //             alert('Ajax request aborted.');
-      //         } else {
-      //             alert('Uncaught Error.\n' + jqXHR.responseText);
-      //         }
-      //       }
-      //     });
-      //   });
-      },
-      progressall: function(e, data) {
-        var done = parseInt(data.loaded * 100) / data.total;
-        if(done == 100){
-          $('button.cancel').hide();
-        }
-      //   $('#progress-percent').html(done.toFixed(2) + '%');
-      //   $('#progress').css({ width: done + '%'});
-      },
-      success: function(res) {
-        total_uploaded_size = completed_upload_size + res.uploaded_size
-        var done = parseInt(total_uploaded_size * 100)/total_file_size;
-        $('#progress-percent').html(done.toFixed(2) + '%');
-        $('#progress').css({ width: done + '%'});
-        if(res.file_size == res.uploaded_size){
-          completed_upload_size += res.file_size  
-        }
-        if(completed_upload_size == total_file_size){
-          alert("Upload complete");
-        }
-      },
-      error: function(jqXHR, exception) {
-        if (jqXHR.status === 0) {
-          console.log("111");
-        //     alert('Not connect.\n Verify Network.');
-        } else if (jqXHR.status == 404) {
-          console.log("222");
-        //     alert('Requested page not found. [404]');
-        } else if (jqXHR.status == 500) {
-          console.log("333");
-        //     alert('Internal Server Error [500].');
-        } else if (exception === 'parsererror') {
-          console.log("444");
-        //     alert('Requested JSON parse failed.');
-        } else if (exception === 'timeout') {
-          console.log("555");
-        //     alert('Time out error.');
-        } else if (exception === 'abort') {
-          console.log("666");
-        //     alert('Ajax request aborted.');
-        } else {
-          console.log("777");
-        //     alert('Uncaught Error.\n' + jqXHR.responseText);
-        }
+    },
+    success: function(res) {
+      total_uploaded_size = completed_upload_size + res.uploaded_size;
+      var done = parseInt(total_uploaded_size * 100)/total_file_size;
+      var ind_done = parseInt((res.uploaded_size * 100)/res.file_size);
+      $('#progress-percent').html(done.toFixed(2) + '%');
+      $('#progress').css({ width: done + '%'});
+      var key = res.filename.slice(0, 5) + res.file_size.toString().slice(0, 5)
+      var progress_div = $(`.${key}`);
+      progress_div.find('span.progress-percent').html(ind_done.toFixed(2) + '%');
+      progress_div.find('div.progress-bar').css({ width: ind_done + '%'});
+      if(res.file_size == res.uploaded_size){
+        completed_upload_size += res.file_size;
+        $(`.${key}`).find('div.ind_cancel').hide();
+        requests[key] = null;
       }
-    });
+      if(completed_upload_size == total_file_size){
+        alert("Upload complete");
+      }
+    },
+    error: function(jqXHR, exception) {
+      if (jqXHR.status === 0) {
+        console.log("111");
+      //     alert('Not connect.\n Verify Network.');
+      } else if (jqXHR.status == 404) {
+        console.log("222");
+      //     alert('Requested page not found. [404]');
+      } else if (jqXHR.status == 500) {
+        console.log("333");
+      //     alert('Internal Server Error [500].');
+      } else if (exception === 'parsererror') {
+        console.log("444");
+      //     alert('Requested JSON parse failed.');
+      } else if (exception === 'timeout') {
+        console.log("555");
+      //     alert('Time out error.');
+      } else if (exception === 'abort') {
+        console.log("666");
+      //     alert('Ajax request aborted.');
+      } else {
+        console.log("777");
+      //     alert('Uncaught Error.\n' + jqXHR.responseText);
+      }
+    }
+  });
   
   $('button.cancel').click(function (e) {
-    request_var.abort();
+    $.each(requests, function(index, request){
+      request.abort();
+    });
+    $(this).hide();
     alert("abortat");
   });
   
@@ -156,6 +147,8 @@
       // plot error
       return;
     };
+    upload_started = true;
+    $('#progress-bar').css('display','flex');
     $.each(files, function(index, file){
       total_file_size += file.files[0].size
     })
@@ -175,43 +168,50 @@
   
   function setup_upload(file_sender){
     $.each(files, function(index, data_file) {
-      var file = data_file.files[0];
-      $.ajax({
-        method: 'post',
-        url: 'uploads',
-        dataType: 'json',
-        data: { filename: file.name, file_size: file.size, file_sender_id: file_sender},
-        success: function(res) {
-          data_file.formData = res;
-          new_files.push(data_file)
-          if(new_files.length == files.length){
-            trigger_upload();
-          }
-        },
-        error: function(jqXHR, exception) {
-          if (jqXHR.status === 0) {
+      $.each(data_file.files, function(index, file){
+        $.ajax({
+          method: 'post',
+          url: 'uploads',
+          dataType: 'json',
+          data: { filename: file.name, file_size: file.size, file_sender_id: file_sender},
+          success: function(res) {
+            data_file.formData = res;
+            new_files.push(data_file)
+            if(new_files.length == files.length){
+              trigger_upload();
+            }
+          },
+          error: function(jqXHR, exception) {
+            if (jqXHR.status === 0) {
               alert('Not connect.\n Verify Network.');
-          } else if (jqXHR.status == 404) {
+            } else if (jqXHR.status == 404) {
               alert('Requested page not found. [404]');
-          } else if (jqXHR.status == 500) {
+            } else if (jqXHR.status == 500) {
               alert('Internal Server Error [500].');
-          } else if (exception === 'parsererror') {
+            } else if (exception === 'parsererror') {
               alert('Requested JSON parse failed.');
-          } else if (exception === 'timeout') {
+            } else if (exception === 'timeout') {
               alert('Time out error.');
-          } else if (exception === 'abort') {
+            } else if (exception === 'abort') {
               alert('Ajax request aborted.');
-          } else {
+            } else {
               alert('Uncaught Error.\n' + jqXHR.responseText);
+            }
           }
-        }
+        });
       });
     });
   }
   
   function trigger_upload(){
     $.each(new_files, function(index, file){
-      request_var = file.submit();
+      file_obj = file.files[0]
+      key = file_obj.name.slice(0, 5) + file_obj.size.toString().slice(0, 5)
+      ind_cancel = $(`.${key}`).find('div.ind_cancel');
+      ind_cancel.show();
+      ind_cancel.attr("key", key);
+      file_sizes[key] = file_obj.size;
+      requests[key] = file.submit();
       $('button.cancel').show();
     })
     new_files = null;
@@ -220,18 +220,59 @@
   
   function construct_file_display(file){
     $('#file-detail-holder').show();
-    string = "<tr><td>" + file.name + "</td><td>" + file.size + "</td>";
-    $('#file-detail-table table tr:last').after(string);
+    string = "<div class='"+ file.name.slice(0, 5) + file.size.toString().slice(0, 5) + " card bg-light'><div class='card-header'><div class='filename'>"
+       + file.name + "</div><div class='removefile'>X</div></div><div class='card-body'><div class='row'><div class='col col-lg-2'>"
+       + "<p class='filesize card-text'>" + bytesToSize(file.size) + "</p></div><div class='col'><div class='progress'>"
+       + "<div class='progress-bar progress-bar-striped bg-success progress-bar-animated' role='progressbar'>"
+       + "<span class='progress-percent'></span></div></div></div><div class='col-md-auto'><div"
+       + " class='ind_cancel'>X</div></div></div></div></div>";
+    $('#file-detail-div').append(string);
   }
+
+  $("body").delegate("div.removefile", "click", function() {
+    var parent_div = $(this).parent().parent();
+    var file_name = parent_div.find('div.filename').html();
+    var file_size = parent_div.find('p.filesize').html();
+    files = files.filter(function(obj){
+      file = obj.files[0]
+      return (file.name != file_name && file.size != file_size);
+    });
+    parent_div.parent().remove();
+  });
+  
+  function bytesToSize(bytes) {
+    var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 B';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
+    return (bytes / Math.pow(1000, i)).toFixed(1) + ' ' + sizes[i];
+  }
+  
+    $("body").delegate("div.card", "mouseenter", function() {
+      var removefile = $(this).find('div.removefile');
+      if(!upload_started){
+        removefile.show();
+      }
+    })
+    
+    $("body").delegate("div.card", "mouseleave", function() {
+      var removefile = $(this).find('div.removefile');
+      removefile.hide();
+    })
+    
+    $("body").delegate("div.ind_cancel", "click", function() {
+      key = $(this).attr("key");
+      requests[key].abort();
+      requests[key] = null;
+      completed_upload_size += file_sizes[key];
+      $(this).hide();
+      var count = 0;
+      $.each(requests, function(index, request){
+        if(request != null){
+          count += 1;
+        }
+      })
+      if(!(count > 0)){
+        $('button.cancel').hide();
+      }
+    })
 </script>
-<style>
-  .cancel{
-    display: none;
-  }
-  #file-detail-holder{
-    display: none;
-  }
-  #file-detail-table{
-    background-color: lightgrey;
-  }
-</style>

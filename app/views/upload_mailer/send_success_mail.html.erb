@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hello <%= @sender.email_id %></h1>
+    <p>
+      <%= @file.total_files %> files has been sent to <%= @receiver.email_id %> through ShareFile
+      <br>
+      Please click on the link below to download the file:<br> 
+      <%= link_to "Download", @url %><br>
+    </p>
+    <p>Note: This link will be automatically expriy after 7 days.</p>
+    <p>Warm regards,
+    ShareFile Software Tech</p>
+  </body>
+</html>

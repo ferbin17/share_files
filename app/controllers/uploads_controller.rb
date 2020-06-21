@@ -22,7 +22,7 @@ class UploadsController < ApplicationController
       FileUtils.mkdir_p(dir) unless File.exist?(dir)
       @upload = @file_sender.uploads.new(filename: filename, file_size: params[:file_size], path: File.join(dir, "#{uuid}#{ext}"))
       if @file_sender.save
-        render json: { id: @upload.id, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
+        render json: { id: @upload.id, filename: @upload.filename, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
       else
         render json: { error: @upload.errors }, status: 422
       end
@@ -44,7 +44,7 @@ class UploadsController < ApplicationController
           @file_sender.update(uploaded_files: @file_sender.uploaded_files + 1, uploaded_size: @file_sender.uploaded_size + @upload.uploaded_size)
         end
       }
-      render json: { id: @upload.id, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
+      render json: { id: @upload.id, filename: @upload.filename, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
     else
       render json: { error: @upload.errors }, status: 422
     end
