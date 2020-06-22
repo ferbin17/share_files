@@ -50,6 +50,17 @@ class UploadsController < ApplicationController
     end
   end
   
+  def cancel_upload
+    @file_sender = FileSender.find_by_id(params[:file_sender_id])
+    result =
+      if @file_sender.present?
+        @file_sender.destroy
+      else
+        false
+      end
+    render json: { result:  result}, status: 200
+  end
+  
   private
     def set_email_ids
       unless @file_sender.sender_id.present?

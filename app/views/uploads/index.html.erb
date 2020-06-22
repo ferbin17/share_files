@@ -1,52 +1,56 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-    </div>
-    <div class="col">
-      <%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
-        <div class="form-group">
-          <label for="SenderEmail">Sender email</label>
-          <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
-            class:"form-control" , placeholder: "Enter sender email" }  %>
-        </div>
-        <div class="form-group">
-          <label for="ReceiverEmail">Receiver email</label>
-          <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
-            class:"form-control" , placeholder: "Enter receiver email" }  %>
-        </div>
-        <div class="form-group">
-          <label for="FileUploader" class="">File</label>
-          <%= file_field_tag :upload, id: "FileUploader", class:"form-control", multiple: true%>
-        </div>
-        <div class="form-group" id="file-detail-holder">
-          <div class="card bg-dark mb-3">
-            <div class="card-header text-white">Files</div>
-            <div id="file-detail-div" class="card-body"></div>
-          </div>
-        </div>
-        <div class="form-group">
-          <%= submit_tag 'Send', class: "btn btn-primary"  %>
-        </div>
-      <% end %>
-
-      <div class="row">
-        <div class="col">
-          <div id="progress-bar" class="progress">
-            <div id="progress" class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar">
-              <span id="progress-percent"></span>
+  <div class="row form-div">
+    <div class="no-col">
+      <div class="form-group" id="file-detail-holder">
+        <div class="card mb-3">
+          <%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
+            <div id="file-detail-div" class="card-header bg-light"></div>
+            <div class="card-body">
+              <div id="form-div">
+                <div class="form-group">
+                  <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
+                    class:"form-control" , placeholder: "Enter sender email" }  %>
+                </div>
+                <div class="form-group">
+                  <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
+                    class:"form-control" , placeholder: "Enter receiver email" }  %>
+                </div>
+                <div class="form-group">
+                  <%= file_field_tag :upload, id: "FileUploader", class:"form-control", multiple: true%>
+                </div>
+              </div>
+              <div id="progress-circle">
+                <div class="progress mx-auto" data-value='0'>
+                  <span class="progress-left">
+                    <span class="progress-bar border-danger"></span>
+                  </span>
+                  <span class="progress-right">
+                    <span class="progress-bar border-danger"></span>
+                  </span>
+                  <div class="progress-value w-100 h-100 rounded-circle d-flex 
+                    align-items-center justify-content-center">
+                    <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>  
-        <div class="col col-lg-2">
-          <button type="button" class="cancel btn btn-secondary" name="cancel">Cancel</button>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col">
+                  <button type="submit" class="submit btn-override btn btn-primary"><span>Send</span></button>
+                  <button type="button" class="cancel btn-override btn btn-primary"><span>Cancel</span></button>
+                  <button type="button" class="form-reseter btn-override btn btn-primary">
+                    <span>Send a another one</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>          
         </div>
       </div>
     </div>
-    <div class="col">
-    </div>
   </div>
 </div>
-
 <script>
   var files = [];
   var new_files = [];
@@ -56,10 +60,12 @@
   var total_uploaded_size = 0;
   var completed_upload_size = 0;
   var upload_started = false;
+  var file_sender_id;
   $('#fileupload').fileupload({    
     dataType: 'json',
     url: 'uploads/chunk_create',
     maxChunkSize: 2500000,
+    sequentialUploads: true,
     add: function(e, data) {
       $.each(data.files, function(index, file){
         var found = false;
@@ -73,26 +79,31 @@
         if(!found){
           files.push(data);
           construct_file_display(file)
-        }else{
-          console.log("duplicate")
-          // raise errorutton.cancel').hide();
-        }
+        }else{}
       });
     },
     progressall: function(e, data) {
       total_uploaded_size = completed_upload_size + data.loaded
       var done = parseInt(total_uploaded_size * 100)/total_file_size;
-      if(Math.round(done) == 100){
+      if(Math.round(done) > 100.0 || Math.round(done) == 100.0){
         $('button.cancel').hide();
+        $.each(file_sizes, function(index, size){
+          if(size == data.total){
+            key = index;
+          }
+        })
+        if(key != undefined){
+          $(`.${key}`).find('div.ind_cancel').hide();
+        }
       }
     },
     success: function(res) {
       total_uploaded_size = completed_upload_size + res.uploaded_size;
       var done = parseInt(total_uploaded_size * 100)/total_file_size;
       var ind_done = parseInt(res.uploaded_size * 100)/res.file_size;
-      $('#progress-percent').html(done.toFixed(2) + '%');
-      $('#progress').css({ width: done + '%'});
-      var key = res.filename.slice(0, 5) + res.file_size.toString().slice(0, 5)
+      $('#progress-percent').html(done.toFixed(2) + " %");
+      change_progress(done.toFixed(2));
+      var key = res.filename.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + res.file_size.toString().slice(0, 5)
       var progress_div = $(`.${key}`);
       progress_div.find('span.progress-percent').html(ind_done.toFixed(2) + '%');
       progress_div.find('div.progress-bar').css({ width: ind_done + '%'});
@@ -102,42 +113,48 @@
         requests[key] = null;
       }
       if(completed_upload_size == total_file_size){
-        alert("Upload complete");
+        $('#progress-percent').html('');
+        $('#progress-percent').addClass("tick-mark");
+        $('button.form-reseter').css("display", "block");
+        change_file_list();
       }
     },
     error: function(jqXHR, exception) {
-      if (jqXHR.status === 0) {
-        console.log("111");
-      //     alert('Not connect.\n Verify Network.');
-      } else if (jqXHR.status == 404) {
-        console.log("222");
-      //     alert('Requested page not found. [404]');
-      } else if (jqXHR.status == 500) {
-        console.log("333");
-      //     alert('Internal Server Error [500].');
-      } else if (exception === 'parsererror') {
-        console.log("444");
-      //     alert('Requested JSON parse failed.');
-      } else if (exception === 'timeout') {
-        console.log("555");
-      //     alert('Time out error.');
-      } else if (exception === 'abort') {
-        console.log("666");
-      //     alert('Ajax request aborted.');
-      } else {
-        console.log("777");
-      //     alert('Uncaught Error.\n' + jqXHR.responseText);
+      raise_error_message(jqXHR, exception);
+    },
+    fail: function (e, data){
+    },
+    done: function(e, data){
+      if(new_files.length > 0){
+        trigger_one_upload();
       }
     }
   });
   
   $('button.cancel').click(function (e) {
-    $.each(requests, function(index, request){
-      request.abort();
-    });
-    $(this).hide();
-    alert("abortat");
-  });
+    var result = confirm("Want to cancel all uploads?");
+    if(result){
+      $.each(requests, function(index, request){
+        if(request != null){
+          request.abort();
+        }
+      });
+      $(this).hide();
+      $.ajax({
+        method: 'post',
+        url: 'uploads/cancel_upload',
+        dataType: 'json',
+        data: { file_sender_id: file_sender_id },
+        success: function(res) {
+        },
+        error: function(jqXHR, exception){
+          raise_error_message(jqXHR, exception);
+        }
+      })
+      $('.ind_cancel').hide();
+      $('.form-reseter').css("display", "block");
+    }
+  })
   
   $('#fileupload').on('submit', function(e) {
     e.preventDefault();
@@ -145,26 +162,36 @@
     var sender = $('#SenderEmail').val();
     var receiver = $('#ReceiverEmail').val();
     if(sender == "" || receiver == ""){
-      // plot error
+      if($('#SenderEmail').attr("required", "") != "required" || $('#ReceiverEmail').attr("required", "") != "required"){
+        $('#SenderEmail').attr("required", "required");
+        $('#ReceiverEmail').attr("required", "required");
+        $(this).submit();
+      }
       return;
     };
-    upload_started = true;
-    $('#progress-bar').css('display','flex');
-    $.each(files, function(index, file){
-      total_file_size += file.files[0].size
-    })
-    $.ajax({
-      method: 'post',
-      url: 'uploads/set_users',
-      dataType: 'json',
-      data: { sender_email: sender, receiver_email: receiver, total_files: files.length, total_file_size: total_file_size},
-      success: function(res) {
-        setup_upload(res.id)
-      },
-      error: function(jqXHR, exception){
-        // console.log(jqXHR);
-      }
-    })    
+    var result = confirm("Want to start the upload?");
+    if(result){
+      upload_started = true;
+      $.each(files, function(index, file){
+        total_file_size += file.files[0].size
+      })
+      $.ajax({
+        method: 'post',
+        url: 'uploads/set_users',
+        dataType: 'json',
+        data: { sender_email: sender, receiver_email: receiver, total_files: files.length,
+          total_file_size: total_file_size},
+        success: function(res) {
+          $('#form-div').hide();
+          $('.submit').hide();
+          file_sender_id = res.id;
+          setup_upload(res.id)
+        },
+        error: function(jqXHR, exception){
+          raise_error_message(jqXHR, exception);
+        }
+      }) 
+    }   
   });
   
   function setup_upload(file_sender){
@@ -179,55 +206,46 @@
             data_file.formData = res;
             new_files.push(data_file)
             if(new_files.length == files.length){
-              trigger_upload();
+              change_progress(0.1);
+              $('#progress-circle').show();
+              trigger_one_upload();
             }
           },
           error: function(jqXHR, exception) {
-            if (jqXHR.status === 0) {
-              alert('Not connect.\n Verify Network.');
-            } else if (jqXHR.status == 404) {
-              alert('Requested page not found. [404]');
-            } else if (jqXHR.status == 500) {
-              alert('Internal Server Error [500].');
-            } else if (exception === 'parsererror') {
-              alert('Requested JSON parse failed.');
-            } else if (exception === 'timeout') {
-              alert('Time out error.');
-            } else if (exception === 'abort') {
-              alert('Ajax request aborted.');
-            } else {
-              alert('Uncaught Error.\n' + jqXHR.responseText);
-            }
+            raise_error_message(jqXHR, exception);
           }
         });
       });
     });
   }
   
-  function trigger_upload(){
-    $.each(new_files, function(index, file){
-      file_obj = file.files[0]
-      key = file_obj.name.slice(0, 5) + file_obj.size.toString().slice(0, 5)
-      ind_cancel = $(`.${key}`).find('div.ind_cancel');
-      ind_cancel.show();
-      ind_cancel.attr("key", key);
-      file_sizes[key] = file_obj.size;
-      requests[key] = file.submit();
-      $('button.cancel').show();
-    })
-    new_files = null;
-    files = null;
+  function trigger_one_upload(){
+    file = new_files[0];
+    file_obj = file.files[0]
+    key = file_obj.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file_obj.size.toString().slice(0, 5)
+    ind_cancel = $(`.${key}`).find('div.ind_cancel');
+    ind_cancel.show();
+    ind_cancel.attr("key", key);
+    file_sizes[key] = file_obj.size;
+    requests[key] = file.submit();
+    $('button.cancel').css("display", "block");
+    new_files = new_files.filter(function(obj){
+      file = obj.files[0]
+      return (file.name != file_obj.name && file.size != file_obj.size);
+    });
   }
   
   function construct_file_display(file){
-    $('#file-detail-holder').show();
-    string = "<div class='"+ file.name.slice(0, 5) + file.size.toString().slice(0, 5) + " card bg-light'><div class='card-header'><div class='filename'>"
-       + file.name + "</div><div class='removefile'>X</div></div><div class='card-body'><div class='row'><div class='col-md-auto'>"
-       + "<p class='filesize card-text'>" + bytesToSize(file.size) + "</p></div><div class='col'><div class='progress'>"
+    string = "<div class='"+ file.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file.size.toString().slice(0, 5)
+       + " nested-card card bg-light'><div class='card-header'><div class='filename'>"
+       + file.name + "</div><div class='removefile'>X</div></div><div class='card-body'>"
+       + "<div class='row'><div class='col-md-auto'><p class='filesize card-text'>" + bytesToSize(file.size) 
+       + "</p></div><div class='col'><div class='progress'>"
        + "<div class='progress-bar progress-bar-striped bg-success progress-bar-animated' role='progressbar'>"
        + "<span class='progress-percent'></span></div></div></div><div class='col-md-auto'><div"
        + " class='ind_cancel'>X</div></div></div></div></div>";
     $('#file-detail-div').append(string);
+    $('.submit').css("display", "block");
   }
 
   $("body").delegate("div.removefile", "click", function() {
@@ -239,6 +257,9 @@
       return (file.name != file_name && file.size != file_size);
     });
     parent_div.remove();
+    if(files.length < 1){
+      $('.submit').hide();
+    }
   });
   
   function bytesToSize(bytes) {
@@ -248,32 +269,110 @@
     return (bytes / Math.pow(1000, i)).toFixed(1) + ' ' + sizes[i];
   }
   
-    $("body").delegate("div.card", "mouseenter", function() {
+    $("body").delegate("div.nested-card", "mouseenter", function() {
       var removefile = $(this).find('div.removefile');
       if(!upload_started){
         removefile.show();
       }
     })
     
-    $("body").delegate("div.card", "mouseleave", function() {
+    $("body").delegate("div.nested-card", "mouseleave", function() {
       var removefile = $(this).find('div.removefile');
       removefile.hide();
     })
     
     $("body").delegate("div.ind_cancel", "click", function() {
-      key = $(this).attr("key");
-      requests[key].abort();
-      requests[key] = null;
-      completed_upload_size += file_sizes[key];
-      $(this).hide();
-      var count = 0;
-      $.each(requests, function(index, request){
-        if(request != null){
-          count += 1;
+      var result = confirm("Want to cancel the upload?");
+      if(result){
+        key = $(this).attr("key");
+        requests[key].abort();
+        requests[key] = null;
+        completed_upload_size += file_sizes[key];
+        $(this).hide();
+        var count = 0;
+        $.each(requests, function(index, request){
+          if(request != null){
+            count += 1;
+          }
+        })
+        if(!(count > 0)){
+          $('button.cancel').hide();
         }
-      })
-      if(!(count > 0)){
-        $('button.cancel').hide();
       }
     })
+    
+    function change_progress(value) {
+      if(value > 100.00){
+        value = 100;
+      }
+      $("#progress-circle .progress").each(function() {
+        var left = $(this).find('.progress-left .progress-bar');
+        var right = $(this).find('.progress-right .progress-bar');
+        if (value > 0) {
+          if (value <= 50) {
+            right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+          } else {
+            right.css('transform', 'rotate(180deg)')
+            left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+          }
+        }
+      })
+    }
+
+    function percentageToDegrees(percentage) {
+      return percentage / 100 * 360
+    }
+    
+    function change_file_list(){
+      receiver = $('#ReceiverEmail').val();
+      count = 0
+      $.each(file_sizes, function(index, size){
+        count += 1;
+      })
+      string = count + " files sent to " + receiver;
+      $('#file-detail-div').html(string); 
+    }
+    
+    $('.form-reseter').on('click', function(){
+      $(this).hide();
+      reset_everything();
+    })
+    
+    function reset_everything(delay=1000){
+      setTimeout(function(){
+        var form = document.getElementById('fileupload');
+        form.reset();
+        $('#progress-circle').hide();
+        $('#form-div').show();
+        $('#file-detail-div').html('');
+        $('#progress-percent').removeClass("tick-mark");
+        files = [];
+        new_files = [];
+        requests = {};
+        file_sizes = {};
+        total_file_size = 0;
+        total_uploaded_size = 0;
+        completed_upload_size = 0;
+        upload_started = false;
+        file_sender_id = null;
+      }, )
+    }
+    
+    function raise_error_message(jqXHR, exception){
+      if (jqXHR.status === 0 && exception != "abort") {
+        alert('Not connect.\n Verify Network.');
+      } else if (jqXHR.status == 404) {
+        alert('Requested page not found. [404]');
+      } else if (jqXHR.status == 500) {
+        alert('Internal Server Error [500].');
+      } else if (exception === 'parsererror') {
+        alert('Requested JSON parse failed.');
+      } else if (exception === 'timeout') {
+        alert('Time out error.');
+      } else if (exception === 'abort') {
+        // alert('Ajax request aborted.');
+      } else {
+        alert('Uncaught Error.\n' + jqXHR.responseText);
+      }
+    }
 </script>

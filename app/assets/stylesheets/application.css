@@ -13,3 +13,15 @@
  *= require_tree .
  *= require_self
  */
+ html, body {
+  height: 100%;
+  background-color: #000000;
+  background-image: linear-gradient(147deg, #000000 0%, #04619f 74%);
+}
+
+.container {
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,21 +1,72 @@
 // Place all the styles related to the Uploads controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+html {
+	background: #FF7F50 no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.form-div{
+  max-height: 25em;
+  overflow-y: scroll;
+}
+
 .card .card-header{
   padding: 0rem 1rem;
   border-bottom: none;
 }
 
 .card .card-body{
-  padding: 0.1rem 1rem;
+  padding: 0rem 1rem;
+}
+
+.card .card-footer{
+  background-color: white;
+  padding: 0rem 1rem;
 }
 
 #file-detail-div .card{
   margin: 0.1rem;
 }
 
+.form-group{
+  margin-bottom: 1rem !important;
+}
+
+.form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"]{
+  border: none;
+  border-bottom: 1px solid lightgrey;
+  background-color: white;
+}
+
+.form-group input[type="file"]{
+  border: none;
+  background-color: white;
+}
+
 .filename{
   float: left;
+  white-space: nowrap; 
+  width: 90%; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+.nested-card .card-body {
+	background: rgba(0,0,0,.03);
+}
+
+.nested-card .card-body .col{
+  padding: 5px 15px !important;
+}
+
+.nested-card .card-body .col .progress{
+  background-color: dodgerblue;
 }
 
 .removefile{
@@ -30,15 +81,13 @@
 #progress-bar{
   display: none;
 }
+
 .cancel{
-  display: none;
-}
-#file-detail-holder{
   display: none;
 }
 
 #file-detail-div{
-  padding: 0.2rem !important;
+  padding: 0rem 0.2rem  !important;
 }
 
 .ind_cancel{
@@ -48,3 +97,141 @@
 .ind_cancel:hover{
   cursor: pointer;
 }
+
+.submit{
+  display: none;
+}
+
+#progress-circle{
+  display: none;
+}
+
+#form-div{
+  margin: 10px auto;
+}
+
+.tick-mark {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: 64px;
+  width: 32px;
+  border-bottom: 7px solid #78b13f;
+  border-right: 7px solid #78b13f;;
+}
+
+#progress-percent{
+  font-size: 1.3rem;
+}
+
+//CSS for Progress Circle
+#progress-circle .progress {
+  width: 120px;
+  height: 120px;
+  background: none;
+  position: relative;
+}
+
+#progress-circle .progress::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid #eee;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#progress-circle .progress>span {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+#progress-circle .progress .progress-left {
+  left: 0;
+}
+
+#progress-circle .progress .progress-bar {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border-width: 6px;
+  border-style: solid;
+  position: absolute;
+  top: 0;
+}
+
+#progress-circle .progress .progress-left .progress-bar {
+  left: 100%;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  border-left: 0;
+  -webkit-transform-origin: center left;
+  transform-origin: center left;
+}
+
+#progress-circle .progress .progress-right {
+  right: 0;
+}
+
+#progress-circle .progress .progress-right .progress-bar {
+  left: -100%;
+  border-top-left-radius: 80px;
+  border-bottom-left-radius: 80px;
+  border-right: 0;
+  -webkit-transform-origin: center right;
+  transform-origin: center right;
+}
+
+#progress-circle .progress .progress-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.form-reseter{
+  display: none;
+  width: 270px !important;
+}
+
+// CSS for button
+.btn-override {
+	background-image: linear-gradient(to right, #006175 0%, #00a950 100%);
+	border-radius: 40px;
+  box-sizing: border-box;
+	color: #00a84f;
+	font: 1.125rem 'Oswald', Arial, sans-serif; /*18*/
+	height: 50px;
+	letter-spacing: 1px;
+	margin: 0 auto;
+	padding: 4px;
+	position: relative;
+  text-decoration: none;
+	text-transform: uppercase;
+	width: 150px;
+	z-index: 2;
+}
+
+.btn-override:hover {
+	color: #fff;
+}
+
+.btn-override span {
+	align-items: center;
+	background: #e7e8e9;
+	border-radius: 40px;
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	transition: background .5s ease;
+	width: 100%;
+}
+
+.btn-override:hover span {
+	background: transparent;
+}
+
