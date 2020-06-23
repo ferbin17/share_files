@@ -51,10 +51,15 @@ class UploadsController < ApplicationController
   end
   
   def cancel_upload
-    @file_sender = FileSender.find_by_id(params[:file_sender_id])
+    if params[:file_sender_id].present?
+      @file_sender = FileSender.find_by_id(params[:file_sender_id])
+    elsif @file = Upload.find_by_id(params[:file_id])
+    end
     result =
       if @file_sender.present?
         @file_sender.destroy
+      elsif @file.present?
+        @file.destroy
       else
         false
       end
