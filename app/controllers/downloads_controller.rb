@@ -1,8 +1,7 @@
 class DownloadsController < ApplicationController
-
   def show
     @file_sender = FileSender.find_by_uuid(params[:id])
-    if @upload.present?
+    if @file_sender.present?
       @uploads = @file_sender.uploads
     else
       flash[:danger] = "Invalid URL"
@@ -19,4 +18,22 @@ class DownloadsController < ApplicationController
       redirect_to :root
     end
   end
+  
+  def download_as_zip
+    @file_sender = FileSender.find_by_uuid(params[:id])
+    if @file_sender.present?
+      path = 
+        if @file_sender.zip_exists
+          "#{Rails.root}/tmp/download/download_#{@file_sender.id}.zip" 
+        else
+          @file_sender.create_zip.name
+        end
+      send_file path, filename: "download_#{@file_sender.id}.zip", disposition: 'inline'
+    else
+      flash[:danger] = "Invalid URL"
+      redirect_to :root
+    end
+  end
+  
+  private
 end

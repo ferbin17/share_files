@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :downloads, except: [:index, :new, :create, :edit, :update, :destroy] do
     member do
       get 'download'
+      get 'download_as_zip'
     end
   end
   # get '*unmatched_route', to: 'application#raise_not_found'

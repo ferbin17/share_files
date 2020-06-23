@@ -2,15 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-html {
-	background: #FF7F50 no-repeat center center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	overflow: hidden;
-}
-
 .form-div{
   max-height: 25em;
   overflow-y: scroll;
@@ -28,6 +19,10 @@ html {
 .card .card-footer{
   background-color: white;
   padding: 0rem 1rem;
+}
+
+#file-detail-div{
+  padding: 0rem 0.2rem  !important;
 }
 
 #file-detail-div .card{
@@ -84,10 +79,6 @@ html {
 
 .cancel{
   display: none;
-}
-
-#file-detail-div{
-  padding: 0rem 0.2rem  !important;
 }
 
 .ind_cancel{

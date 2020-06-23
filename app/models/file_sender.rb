@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'zip'
 class FileSender < ApplicationRecord
   belongs_to :receiver, class_name: "User"
   belongs_to :sender, class_name: "User"
@@ -5,6 +7,32 @@ class FileSender < ApplicationRecord
   validates_presence_of :sender_id, :receiver_id
   after_create :set_expiry_datetime_and_uuid
   after_save :mail_download_link, if: Proc.new{|file_sender| !file_sender.receiver_mail_sent && !file_sender.sender_mail_sent && file_sender.total_files && file_sender.uploaded_files > 0 && file_sender.total_files == file_sender.uploaded_files}
+  
+  def create_zip
+    dir  = Rails.root.join('tmp', 'download').to_s
+    FileUtils.mkdir_p(dir) unless File.exist?(dir)
+    zipfile_name = dir + "/download_#{self.id}.zip"
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      uploads.each do |upload|
+        zipfile.add(upload.filename, File.join(upload.upload_file.path.gsub("/#{upload.upload_file_file_name}", ""), upload.upload_file_file_name))
+      end
+      zipfile
+    end
+  end
+  
+  def zip_exists
+    dir  = Rails.root.join('tmp', 'download').to_s
+    FileUtils.mkdir_p(dir) unless File.exist?(dir)
+    zipfile_name = dir + "/download_#{self.id}.zip"
+    File.exist?(zipfile_name)
+  end
+  
+  def delete_zip
+    dir  = Rails.root.join('tmp', 'download').to_s
+    FileUtils.mkdir_p(dir) unless File.exist?(dir)
+    zipfile_name = dir + "/download_#{self.id}.zip"
+    File.delete(zipfile_name) if File.exist?(zipfile_name)
+  end
   
   private
     def set_expiry_datetime_and_uuid
