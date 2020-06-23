@@ -3,11 +3,11 @@ require 'zip'
 class FileSender < ApplicationRecord
   belongs_to :receiver, class_name: "User"
   belongs_to :sender, class_name: "User"
-  has_many :uploads, dependent: :destroy 
+  has_many :uploads, dependent: :destroy
   validates_presence_of :sender_id, :receiver_id
   after_create :set_expiry_datetime_and_uuid
   after_save :mail_download_link, if: Proc.new{|file_sender| !file_sender.receiver_mail_sent && !file_sender.sender_mail_sent && file_sender.total_files && file_sender.uploaded_files > 0 && file_sender.total_files == file_sender.uploaded_files}
-  
+  after_destroy :delete_zip
   def create_zip
     dir  = Rails.root.join('tmp', 'download').to_s
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
@@ -25,13 +25,6 @@ class FileSender < ApplicationRecord
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
     zipfile_name = dir + "/download_#{self.id}.zip"
     File.exist?(zipfile_name)
-  end
-  
-  def delete_zip
-    dir  = Rails.root.join('tmp', 'download').to_s
-    FileUtils.mkdir_p(dir) unless File.exist?(dir)
-    zipfile_name = dir + "/download_#{self.id}.zip"
-    File.delete(zipfile_name) if File.exist?(zipfile_name)
   end
   
   private
@@ -53,5 +46,12 @@ class FileSender < ApplicationRecord
     def mail_download_link
       UploadMailer.with(file_sender: self).send_download_link.deliver_now
       UploadMailer.with(file_sender: self).send_success_mail.deliver_now
+    end
+    
+    def delete_zip
+      dir  = Rails.root.join('tmp', 'download').to_s
+      FileUtils.mkdir_p(dir) unless File.exist?(dir)
+      zipfile_name = dir + "/download_#{self.id}.zip"
+      File.delete(zipfile_name) if File.exist?(zipfile_name)
     end
 end
