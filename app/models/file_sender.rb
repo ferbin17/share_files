@@ -8,6 +8,12 @@ class FileSender < ApplicationRecord
   after_create :set_expiry_datetime_and_uuid
   after_save :mail_download_link, if: Proc.new{|file_sender| !file_sender.receiver_mail_sent && !file_sender.sender_mail_sent && file_sender.total_files && file_sender.uploaded_files > 0 && file_sender.total_files == file_sender.uploaded_files}
   after_destroy :delete_zip
+  scope :active, -> { where(is_expired: false) }
+  
+  def destroy
+    self.update(is_expired: true)
+  end
+  
   def create_zip
     dir  = Rails.root.join('tmp', 'download').to_s
     FileUtils.mkdir_p(dir) unless File.exist?(dir)

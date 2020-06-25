@@ -13,7 +13,7 @@ class UploadsController < ApplicationController
   end
   
   def create
-    @file_sender = FileSender.find_by_id(params[:file_sender_id])
+    @file_sender = FileSender.active.find_by_id(params[:file_sender_id])
     if @file_sender.present?
       filename = params[:filename]
       uuid = SecureRandom.uuid
@@ -52,8 +52,10 @@ class UploadsController < ApplicationController
   
   def cancel_upload
     if params[:file_sender_id].present?
-      @file_sender = FileSender.find_by_id(params[:file_sender_id])
-    elsif @file = Upload.find_by_id(params[:file_id])
+      @file_sender = FileSender.active.find_by_id(params[:file_sender_id])
+    elsif params[:file_id].present?
+      @file = Upload.find_by_id(params[:file_id])
+    else
     end
     result =
       if @file_sender.present?

@@ -5,7 +5,7 @@ class UploadMailer < ApplicationMailer
     @file = params[:file_sender]
     @receiver = @file.receiver
     @sender = @file.sender
-    @url = ENV['ROOT_URL'] + '/downloads/' + @file.uuid
+    @url = AppConfig["host_config"]["host_url"] + '/downloads/' + @file.uuid
     @file.update(receiver_mail_sent: true)
     mail(to: @receiver.email_id, subject: 'ShareFile download link')
   end
@@ -14,7 +14,7 @@ class UploadMailer < ApplicationMailer
     @file = params[:file_sender]
     @receiver = @file.receiver
     @sender = @file.sender
-    @url = ENV['ROOT_URL'] + '/downloads/' + @file.uuid
+    @url = AppConfig["host_config"]["host_url"] + '/downloads/' + @file.uuid
     @file.update(sender_mail_sent: true)
     mail(to: @sender.email_id, subject: 'ShareFile download link sent')
   end

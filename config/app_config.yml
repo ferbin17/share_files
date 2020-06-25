@@ -1,0 +1,10 @@
+mail_config:
+  address: "smtp.gmail.com"
+  port: 587
+  domain: "smtp.gmail.com"
+  user_name: "ferbinupworkprojects@gmail.com"
+  password: "upwork@ferbin"
+  authentication: "plain"
+  enable_starttls_auto: true
+host_config:
+  host_url: "https://share-files-app.herokuapp.com"

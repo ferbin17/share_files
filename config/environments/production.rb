@@ -65,19 +65,18 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
-  host = 'https://share-files-app.herokuapp.com' #replace with your own url
-  ENV['ROOT_URL'] = host
+  host =  AppConfig["host_config"]["host_url"] #replace with your own url
   config.action_mailer.default_url_options = { host: host }
-
+  
   # SMTP settings for gmail
   config.action_mailer.smtp_settings = {
-    address:             "smtp.gmail.com",
-    port:                 587,
-    domain:              "smtp.gmail.com",
-    user_name:           "ferbinupworkprojects@gmail.com",
-    password:            "upwork@ferbin",
-    authentication:      "plain",
-    enable_starttls_auto: true
+    address: AppConfig["mail_config"]["address"],
+    port: AppConfig["mail_config"]["port"],
+    domain: AppConfig["mail_config"]["domain"],
+    user_name: AppConfig["mail_config"]["user_name"],
+    password: AppConfig["mail_config"]["password"],
+    authentication: AppConfig["mail_config"]["authentication"],
+    enable_starttls_auto: AppConfig["mail_config"]["enable_starttls_auto"]
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -107,7 +106,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
   config.hosts << "localhost"
-  config.hosts << "share-files-app.herokuapp.com"
+  config.hosts << AppConfig["host_config"]["host_url"]
   ENV["SHARE_FILE_DATABASE_PASSWORD"] = "iamaunited@18"
 
   # Inserts middleware to perform automatic connection switching.

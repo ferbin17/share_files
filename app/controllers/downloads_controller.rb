@@ -15,13 +15,14 @@ class DownloadsController < ApplicationController
         "#{Rails.root}/tmp/download/download_#{@file_sender.id}.zip" 
       else
         @file_sender.create_zip.name
+        sleep(30)
       end
     send_file path, filename: "download_#{@file_sender.id}.zip", disposition: 'inline'
   end
   
   private
     def find_file_sender_and_check_expiry
-      @file_sender = FileSender.find_by_uuid(params[:id])
+      @file_sender = FileSender.active.find_by_uuid(params[:id])
       if @file_sender.present?
         if @file_sender.expiry_date < Time.now
           @file_sender.destroy

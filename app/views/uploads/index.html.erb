@@ -16,7 +16,8 @@
                     class:"form-control" , placeholder: "Enter receiver email" }  %>
                 </div>
                 <div class="form-group">
-                  <%= file_field_tag :upload, id: "FileUploader", class:"form-control", multiple: true%>
+                  <label for="FileUploader" class="btn-2 purple-white">upload</label>
+                  <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
                 </div>
               </div>
               <div id="progress-circle">
