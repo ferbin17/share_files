@@ -9,7 +9,7 @@ class CreateFileSenders < ActiveRecord::Migration[6.0]
       t.boolean :receiver_mail_sent, default: false
       t.integer :sender_id
       t.integer :receiver_id 
-      t.boolean :is_expired
+      t.boolean :is_expired, default: false
       t.integer :total_files, default: 0
       t.integer :uploaded_files, default: 0 
       t.timestamps
