@@ -7,4 +7,4 @@ mail_config:
   authentication: "plain"
   enable_starttls_auto: true
 host_config:
-  host_url: "https://share-files-app.herokuapp.com"
+  host_url: "share-files-app.herokuapp.com"
