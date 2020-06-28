@@ -253,7 +253,7 @@
     var file_name = parent_div.find('div.filename').html();
     var file_size = parent_div.find('p.filesize').html();
     files = files.filter(function(obj){
-      file = obj.files[0]
+      file = obj.files[0];
       return (file.name != file_name && file.size != file_size);
     });
     parent_div.remove();
