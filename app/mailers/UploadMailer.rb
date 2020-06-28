@@ -24,8 +24,8 @@ class UploadMailer < ApplicationMailer
     @sender = @file.sender
     @receiver = @file.receiver
     @url = AppConfig["host_config"]["host_url"] + '/downloads/' + @file.uuid
-    @file.update(sender_mail_sent: true)
-    mail(to: @sender.email_id, subject: 'ShareFile file delte alert')
+    @file.update(sender_delete_mail_sent: true)
+    mail(to: @sender.email_id, subject: 'ShareFile file delete alert')
   end
   
   def receiver_delete_alert
@@ -33,7 +33,7 @@ class UploadMailer < ApplicationMailer
     @sender = @file.sender
     @receiver = @file.receiver
     @url = AppConfig["host_config"]["host_url"] + '/downloads/' + @file.uuid
-    @file.update(sender_mail_sent: true)
-    mail(to: @receiver.email_id, subject: 'ShareFile file delte alert')
+    @file.update(receiver_delete_mail_sent: true)
+    mail(to: @receiver.email_id, subject: 'ShareFile file delete alert')
   end
 end
