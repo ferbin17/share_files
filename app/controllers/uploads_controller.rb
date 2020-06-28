@@ -61,7 +61,10 @@ class UploadsController < ApplicationController
       if @file_sender.present?
         @file_sender.destroy
       elsif @file.present?
-        @file.destroy
+        @file_sender = @file.file_sender
+        if @file.destroy
+          @file_sender.update(total_file_size: @file_sender.total_file_size - @file.file_size, total_files: @file_sender.total_files - 1)
+        end
       else
         false
       end

@@ -104,7 +104,7 @@
       var ind_done = parseInt(res.uploaded_size * 100)/res.file_size;
       $('#progress-percent').html(done.toFixed(2) + " %");
       change_progress(done.toFixed(2));
-      var key = res.filename.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + res.file_size.toString().slice(0, 5)
+      var key = "file_" + res.id;
       var progress_div = $(`.${key}`);
       progress_div.find('span.progress-percent').html(ind_done.toFixed(2) + '%');
       progress_div.find('div.progress-bar').css({ width: ind_done + '%'});
@@ -218,12 +218,15 @@
     if(new_files.length > 0){
       file = new_files[0];
       file_obj = file.files[0]
-      key = file_obj.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file_obj.size.toString().slice(0, 5)
-      ind_cancel = $(`.${key}`).find('div.ind_cancel');
+      key = file_obj.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file_obj.size.toString().slice(0, 5);
+      id_key = "file_" + file.formData.id;
+      $(`.${key}`).addClass(id_key);
+      $(`.${key}`).removeClass(key);
+      ind_cancel = $(`.${id_key}`).find('div.ind_cancel');
       ind_cancel.show();
-      ind_cancel.attr("key", key);
-      file_sizes[key] = {id: file.formData.id, size: file_obj.size};
-      requests[key] = file.submit();
+      ind_cancel.attr("key", id_key);
+      file_sizes[id_key] = {id: file.formData.id, size: file_obj.size};
+      requests[id_key] = file.submit();
       $('button.cancel').css("display", "block");
       new_files = new_files.filter(function(obj){
         file = obj.files[0]
@@ -412,9 +415,13 @@
     } else if (exception === 'timeout') {
       alert('Time out error.');
     } else if (exception === 'abort') {
-      // alert('Ajax request aborted.');
+      console.log('Ajax request aborted.');
     } else {
       alert('Uncaught Error.\n' + jqXHR.responseText);
     }
+    $('.submit').hide();
+    $('.cancel').hide();
+    $('.ind_cancel').hide();
+    $('.form-reseter').show();
   }
 </script>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hello <%= @receiver.email_id %></h1>
+    <p>
+      You have sent <% @file.total_files %> files to <%= @sender.email_id %> through ShareFile which is near to its expiry date.
+      The file will be automatically deleted on <%= @file.expiry_date %>
+      <br>
+      Please click on the link below to download the file:<br> 
+      <%= link_to "Download", @url %><br>
+    </p>
+    <p>Warm regards,
+    ShareFile Software Tech</p>
+  </body>
+</html>
