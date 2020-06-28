@@ -7,7 +7,7 @@ class FileSender < ApplicationRecord
   validates_presence_of :sender_id, :receiver_id
   after_create :set_expiry_datetime_and_uuid
   after_save :mail_download_link, if: Proc.new{|file_sender| !file_sender.is_expired && !file_sender.receiver_mail_sent && !file_sender.sender_mail_sent && file_sender.total_files && file_sender.uploaded_files > 0 && file_sender.total_files == file_sender.uploaded_files}
-  after_save :mail_delete_alert, if: Proc.new{|file_sender| !file_sender.is_expired && !file_sender.sender_delete_mail_sent && !file_sender.receiver_delete_mail_sent && file_sender.receiver_mail_sent && file_sender.sender_mail_sent}
+  # after_save :mail_delete_alert, if: Proc.new{|file_sender| !file_sender.is_expired && !file_sender.sender_delete_mail_sent && !file_sender.receiver_delete_mail_sent && file_sender.receiver_mail_sent && file_sender.sender_mail_sent}
   after_destroy :delete_zip
   scope :active, -> { where(is_expired: false) }
   
