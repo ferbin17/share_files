@@ -23,3 +23,12 @@ Things you may want to cover:
 
 * ...
 Sharing files over Internet
+
+
+Whenever
+cd to project folder
+bundle exec wheneverize .
+whenever --update-crontab
+
+Sidekiq
+bundle exec sidekiq
