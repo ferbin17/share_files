@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root to: 'welcome#index'
+  resources :file_senders, except: [:index, :new, :edit, :update, :destroy] do
+  end
   resources :uploads, except: [:new, :edit, :update, :destroy, :show] do 
     collection do 
       post 'chunk_create'

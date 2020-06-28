@@ -1,5 +1,8 @@
 class UploadsController < ApplicationController
   def index
+    sender_id = cookies.permanent[:sender_id].present? ? cookies.permanent[:sender_id] : nil
+    @sender = User.find_by_id(sender_id)
+    @file_sender = FileSender.new(sender_id: @sender.try(:id))
   end
   
   def set_users
@@ -76,6 +79,7 @@ class UploadsController < ApplicationController
       unless @file_sender.sender_id.present?
         @sender = User.find_or_create_by(email_id: params[:sender_email])
         @file_sender.update(sender_id: @sender.id)
+        cookies.permanent[:sender_id] = @sender.id  
       end
       unless @file_sender.receiver_id.present?
         @receiver = User.find_or_create_by(email_id: params[:receiver_email])
