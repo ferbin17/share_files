@@ -2,11 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+.outer-override{
+  width: 90% !important;
+}
+
 .form-control:focus{
   box-shadow: 7px 10px 10px -0.4rem rgba(0, 123, 255, 0.25) !important;
 }
 .form-div{
-  max-height: 25em;
+  max-height: 35em;
   overflow-y: scroll;
 }
 
@@ -320,4 +324,26 @@
   color: white;
   background: #664e96;
   border-color: #664e96;
+}
+
+@media (max-width: 991.98px) {  
+  .col-3 .outer, .col-3 .outer-override, .col-3 .outer-small {
+   display: block;
+   position: relative;
+   top: 0;
+   left: 0;
+   height: 100%;
+   width: 100% !important;
+ }
+
+ .col-3 .middle, .col-3 .middle-small {
+   display: block;
+   vertical-align: middle;
+ }
+
+ .inner-small {
+   margin-left: auto;
+   margin-right: auto;
+   width: 100%;
+ }
 }

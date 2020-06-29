@@ -1,52 +1,54 @@
-<div class="container">
-  <div class="row form-div">
-    <div class="no-col">
-      <div class="form-group" id="file-detail-holder">
-        <div class="card mb-3">
-          <%= form_tag @file_sender, multipart: true, id: 'fileupload' do %>
-            <div id="file-detail-div" class="card-header bg-light"></div>
-            <div class="card-body">
-              <div id="form-div">
-                <div class="form-group">
-                  <%= email_field_tag :sender_email, @sender.try(:email_id), {required: true, autocomplete: "off", id: "SenderEmail",
-                    class:"form-control" , placeholder: "Enter sender email" }  %>
+<div class="outer outer-override outer-small">
+  <div class="middle middle-small">
+    <div class="inner inner-small">
+      <div class="form-div">
+        <div class="form-group" id="file-detail-holder">
+          <div class="card mb-3">
+            <%= form_tag @file_sender, multipart: true, id: 'fileupload' do %>
+              <div id="file-detail-div" class="card-header bg-light"></div>
+              <div class="card-body">
+                <div id="form-div">
+                  <div class="form-group">
+                    <%= email_field_tag :sender_email, @sender.try(:email_id), {required: true, autocomplete: "off", id: "SenderEmail",
+                        class:"form-control" , placeholder: "Enter sender email" }  %>
+                  </div>
+                  <div class="form-group">
+                    <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off", id: "ReceiverEmail",
+                        class:"form-control" , placeholder: "Enter receiver email" }  %>
+                  </div>
+                  <div class="form-group">
+                    <label for="FileUploader" class="btn-2 purple-white">upload</label>
+                    <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off", id: "ReceiverEmail",
-                    class:"form-control" , placeholder: "Enter receiver email" }  %>
-                </div>
-                <div class="form-group">
-                  <label for="FileUploader" class="btn-2 purple-white">upload</label>
-                  <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
-                </div>
-              </div>
-              <div id="progress-circle">
-                <div class="progress mx-auto" data-value='0'>
-                  <span class="progress-left">
-                    <span class="progress-bar border-danger"></span>
-                  </span>
-                  <span class="progress-right">
-                    <span class="progress-bar border-danger"></span>
-                  </span>
-                  <div class="progress-value w-100 h-100 rounded-circle d-flex 
-                    align-items-center justify-content-center">
-                    <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                <div id="progress-circle">
+                  <div class="progress mx-auto" data-value='0'>
+                    <span class="progress-left">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <span class="progress-right">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <div class="progress-value w-100 h-100 rounded-circle d-flex 
+                        align-items-center justify-content-center">
+                        <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="card-footer">
-              <div class="row">
-                <div class="col">
-                  <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
-                  <button type="button" class="cancel btn-2 purple-white"><span>Cancel</span></button>
-                  <button type="button" class="form-reseter btn-2 purple-white">
-                    <span>Send a another one</span>
-                  </button>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
+                    <button type="button" class="cancel btn-2 purple-white"><span>Cancel</span></button>
+                    <button type="button" class="form-reseter btn-2 purple-white">
+                      <span>Send a another one</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>          
+            <% end %>          
+          </div>
         </div>
       </div>
     </div>
