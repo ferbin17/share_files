@@ -1,0 +1,20 @@
+<div class="dynamic-div">
+  <div class="carousel-caption d-md-block carousel-caption-override low-display-color-override">
+    <h2 class="display-4">ShareFiles</h2>
+    <div class="lead lead-override">
+      <p>ShareFiles is free to use</p>
+      <p>Send files to friends online for free</p>
+      <p>All you need is a email,<br>And ofcourse, the file</p>
+    </div>
+    <div class="button-container">
+      <%= link_to "Send files to friend", uploads_path, class: "button btn-slider" %>
+    </div>
+  </div>
+</div>
+<script>
+  change_active_tab()
+  function change_active_tab(){
+    $('.nav-item').removeClass("active");
+    $('.home-page').addClass("active");
+  }
+</script>

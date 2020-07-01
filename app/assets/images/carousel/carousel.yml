@@ -1,0 +1,21 @@
+carousel_1.jpg:
+  title: "First Slide"
+  discription: "This is a description for the first slide."
+carousel_2.jpg:
+  title: "Second Slide"
+  discription: "This is a description for the first slide."
+carousel_3.jpg:
+  title: "Third Slide"
+  discription: "This is a description for the first slide."
+carousel_4.jpg:
+  title: "Fourth Slide"
+  discription: "This is a description for the first slide."
+carousel_5.jpg:
+  title: "Fifth Slide"
+  discription: "This is a description for the first slide."
+carousel_6.jpg:
+  title: "Sixth Slide"
+  discription: "This is a description for the first slide."
+default:
+  title: "Default Title"
+  discription: "This is a default description"

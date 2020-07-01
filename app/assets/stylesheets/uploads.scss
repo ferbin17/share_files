@@ -1,0 +1,440 @@
+// Place all the styles related to the Uploads controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.outer-override{
+  width: 90% !important;
+}
+
+.form-control:focus{
+  box-shadow: 7px 10px 10px -0.4rem rgba(0, 123, 255, 0.25) !important;
+}
+.form-div{
+  max-height: 35em;
+  overflow-y: auto;
+}
+
+.uploader-button{
+  width: 50%;
+}
+
+.card{
+  max-width: 100%;
+}
+
+.card .card-header{
+  padding: 0rem 1rem;
+  border-bottom: none;
+}
+
+.card .card-body{
+  padding: 0rem;
+}
+
+.card .card-footer{
+  background-color: white;
+  padding: 0rem 1rem;
+}
+
+#file-detail-div{
+  padding: 0rem 0.2rem  !important;
+}
+
+#file-detail-div .card{
+  margin: 0.1rem;
+}
+
+.form-group{
+  margin-bottom: 1rem !important;
+}
+
+.form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"]{
+  border: none;
+  border-bottom: 1px solid lightgrey;
+  background-color: white;
+}
+
+.form-group input[type="file"]{
+  border: none;
+  background-color: white;
+}
+
+.filename{
+  float: left;
+  white-space: nowrap; 
+  width: 90%; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+.nested-card{
+  max-width: 100% !important;
+}
+
+.nested-card .card-body {
+	background: rgba(0,0,0,.03);
+}
+
+.nested-card .card-body .col{
+  padding: 5px 15px !important;
+}
+
+.nested-card .card-body .col .progress{
+  background-color: dodgerblue;
+}
+
+.removefile{
+  float: right;
+  display: none;
+}
+
+.removefile:hover{
+  cursor: pointer;
+}
+
+#progress-bar{
+  display: none;
+}
+
+.col .cancel{
+  display: none;
+}
+
+.ind_cancel{
+  display: none;
+}
+
+.ind_cancel:hover{
+  cursor: pointer;
+}
+
+.col .submit{
+  display: none;
+}
+
+.submit, .cancel, .form-reseter{
+  margin: 10px auto;
+}
+
+#progress-circle{
+  display: none;
+  margin: 10px auto;
+}
+
+#form-div{
+  margin: 10px auto;
+}
+
+.tick-mark {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: 64px;
+  width: 32px;
+  border-bottom: 7px solid #78b13f;
+  border-right: 7px solid #78b13f;;
+}
+
+#progress-percent{
+  font-size: 1.3rem;
+}
+
+//CSS for Progress Circle
+
+#progress-circle .border-danger{
+  border-color: #664e96 !important;
+}
+#progress-circle .progress {
+  width: 120px;
+  height: 120px;
+  background: none;
+  position: relative;
+}
+
+#progress-circle .progress::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid #eee;
+  border-width: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#progress-circle .progress>span {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+#progress-circle .progress .progress-left {
+  left: 0;
+}
+
+#progress-circle .progress .progress-bar {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border-width: 15px;
+  border-style: solid;
+  position: absolute;
+  top: 0;
+}
+
+#progress-circle .progress .progress-left .progress-bar {
+  left: 100%;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  border-left: 0;
+  -webkit-transform-origin: center left;
+  transform-origin: center left; 
+}
+
+#progress-circle .progress .progress-right {
+  right: 0;
+}
+
+#progress-circle .progress .progress-right .progress-bar {
+  left: -100%;
+  border-top-left-radius: 80px;
+  border-bottom-left-radius: 80px;
+  border-right: 0;
+  -webkit-transform-origin: center right;
+  transform-origin: center right;
+}
+
+#progress-circle .progress .progress-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.col .form-reseter{
+  display: none;
+  width: 270px !important;
+}
+
+// CSS for button
+.btn-override {
+	background-image: linear-gradient(to right, #006175 0%, #00a950 100%);
+	border-radius: 40px;
+  box-sizing: border-box;
+	color: #00a84f;
+	font: 1.125rem 'Oswald', Arial, sans-serif; /*18*/
+	height: 50px;
+	letter-spacing: 1px;
+	margin: 0 auto;
+	padding: 4px;
+	position: relative;
+  text-decoration: none;
+	text-transform: uppercase;
+	width: 150px;
+	z-index: 2;
+}
+
+.btn-override:hover {
+	color: #fff;
+}
+
+.btn-override span {
+	align-items: center;
+	background: #e7e8e9;
+	border-radius: 40px;
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	transition: background .5s ease;
+	width: 100%;
+}
+
+.btn-override:hover span {
+	background: transparent;
+}
+
+// CSS for Uplaod button
+[type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+  display: none;
+}
+
+[type="file"] + label {
+  background: #f15d22;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+  font-size: inherit;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  position: relative;
+  transition: all 0.3s;
+  vertical-align: middle;
+  
+  &:hover {
+    background-color: darken(#f15d22, 10%);
+  }
+  
+  &.btn-2 {
+    background-color: #99c793;
+    border-radius: 50px;
+    overflow: hidden;
+    
+    &::before {
+      color: #fff;
+      content: "\f382";
+      font-family: "Font Awesome 5 Pro";
+      font-size: 100%;
+      height: 100%;
+      right: 130%;
+      line-height: 3.3;
+      position: absolute;
+      top: 0px;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      background-color: darken(#99c793, 30%);
+        
+      &::before {
+        right: 75%;
+      }
+    }
+  }
+}
+
+.btn-2{
+  display: block;
+  text-align: center;
+  margin: 10px auto;
+}
+
+.purple-white {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+  color: #1172c4;
+  font-size: 14px;
+  border-color: #1172c4;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 22px;
+  padding: 10px 40px;
+  text-transform: uppercase;
+  transition: all 0.2s linear;
+  font-weight: 700;
+  color: #664e96;
+  border-color: #664e96;
+  background: transparent;
+}
+
+.purple-white:hover {
+  color: white;
+  background: #664e96;
+  border-color: #664e96;
+}
+
+@media (max-width: 991.98px) {  
+  .col-3 .outer, .col-3 .outer-override, .col-3 .outer-small {
+   display: block;
+   position: relative;
+   top: 0;
+   left: 0;
+   height: 100%;
+   width: 100% !important;
+ }
+
+ .col-3 .middle, .col-3 .middle-small {
+   display: block;
+   vertical-align: middle;
+ }
+
+ .inner-small {
+   margin-left: auto;
+   margin-right: auto;
+   width: 100%;
+ }
+}
+
+.file-stats {
+  text-align: center;
+}
+
+.file-stats h5{
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.file-stats-div{
+  padding: 0.5rem 1rem !important;
+}
+
+.progress-value{
+  background: #7ac142;
+}
+
+// Colors
+$green: #7ac142;
+$white: #fff;
+
+// Misc
+$curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
+
+.checkmark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: $white;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px $green;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: $green;
+  fill: none;
+  animation: stroke .6s $curve forwards;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke .3s $curve .8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px $green;
+  }
+}

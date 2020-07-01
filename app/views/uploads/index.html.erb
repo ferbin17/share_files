@@ -1,0 +1,441 @@
+<div class="outer outer-override outer-small">
+  <div class="middle middle-small">
+    <div class="inner inner-small">
+      <div class="form-div">
+        <div class="form-group" id="file-detail-holder">
+          <div class="card mb-3">
+            <%= form_tag @file_sender, multipart: true, id: 'fileupload' do %>
+              <div id="file-detail-div" class="card-header bg-light"></div>
+              <div class="card-body">
+                <div id="form-div">
+                  <div class="form-group">
+                    <%= email_field_tag :sender_email, @sender.try(:email_id), {required: true, autocomplete: "off", id: "SenderEmail",
+                        class:"form-control" , placeholder: "Enter sender email" } %>
+                  </div>
+                  <div class="form-group">
+                    <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off", id: "ReceiverEmail",
+                        class:"form-control" , placeholder: "Enter receiver email" } %>
+                  </div>
+                  <div class="form-group">
+                    <label for="FileUploader" class="uploader-button btn-2 purple-white">upload</label>
+                    <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
+                  </div>
+                </div>
+                <div id="progress-circle">
+                  <div class="progress mx-auto" data-value='0'>
+                    <span class="progress-left">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <span class="progress-right">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <div class="progress-value w-100 h-100 rounded-circle d-flex 
+                        align-items-center justify-content-center">
+                        <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
+                    <button type="button" class="cancel btn-2 purple-white"><span>Cancel</span></button>
+                    <button type="button" class="form-reseter btn-2 purple-white">
+                      <span>Send a another one</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            <% end %>          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  change_active_tab()
+  function change_active_tab(){
+    $('.nav-item').removeClass("active");
+    $('.upload-page').addClass("active");
+  }
+  var files = [];
+  var new_files = [];
+  var requests = {};
+  var file_sizes = {};
+  var total_file_size = 0;
+  var total_uploaded_size = 0;
+  var completed_upload_size = 0;
+  var upload_started = false;
+  var file_sender_id;
+  $('#fileupload').fileupload({    
+    dataType: 'json',
+    url: 'uploads/chunk_create',
+    maxChunkSize: 2500000,
+    sequentialUploads: true,
+    add: function(e, data) {
+      $.each(data.files, function(index, file){
+        var found = false;
+        $.each(files, function(index, data_in_files){
+          $.each(data_in_files.files, function(index, sub_file){
+            if(file.name == sub_file.name && file.size == sub_file.size ){
+              found = true;
+            }
+          })
+        })
+        if(!found){
+          files.push(data);
+          construct_file_display(file)
+        }else{}
+      });
+    },
+    progressall: function(e, data) {
+      total_uploaded_size = completed_upload_size + data.loaded
+      var done = parseInt(total_uploaded_size * 100)/total_file_size;
+      if(Math.round(done) > 100.0 || Math.round(done) == 100.0){
+        $('button.cancel').hide();
+        $.each(file_sizes, function(index, size){
+          if(size.size == data.total){
+            key = index;
+          }
+        })
+        if(key != undefined){
+          $(`.${key}`).find('div.ind_cancel').hide();
+        }
+      }
+    },
+    success: function(res) {
+      total_uploaded_size = completed_upload_size + res.uploaded_size;
+      var done = parseInt(total_uploaded_size * 100)/total_file_size;
+      var ind_done = parseInt(res.uploaded_size * 100)/res.file_size;
+      $('#progress-percent').html(done.toFixed(2) + " %");
+      change_progress(done.toFixed(2));
+      var key = "file_" + res.id;
+      var progress_div = $(`.${key}`);
+      progress_div.find('span.progress-percent').html(ind_done.toFixed(2) + '%');
+      progress_div.find('div.progress-bar').css({ width: ind_done + '%'});
+      if(res.file_size == res.uploaded_size){
+        completed_upload_size += res.file_size;
+        $(`.${key}`).find('div.ind_cancel').hide();
+        requests[key] = null;
+      }
+      if(completed_upload_size == total_file_size){
+        $('#progress-percent').html('');
+        string = "<svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'>"
+          + "<circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'/>"
+          + "<path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'/></svg>";
+        $('#progress-percent').html(string);
+        // $('#progress-percent').addClass("tick-mark");
+        $('button.form-reseter').css("display", "block");
+        change_file_list();
+      }
+    },
+    error: function(jqXHR, exception) {
+      raise_error_message(jqXHR, exception);
+    },
+    fail: function (e, data){
+      trigger_one_upload();
+    },
+    done: function(e, data){
+      trigger_one_upload();
+    }
+  });
+  
+  $('button.cancel').click(function (e) {
+    $.each(requests, function(index, request){
+      if(request != null){
+        request.abort();
+      }
+    });
+    $(this).hide();
+    $.ajax({
+      method: 'post',
+      url: 'uploads/cancel_upload',
+      dataType: 'json',
+      data: { file_sender_id: file_sender_id },
+      success: function(res) {
+      },
+      error: function(jqXHR, exception){
+        raise_error_message(jqXHR, exception);
+      }
+    })
+    $('.ind_cancel').hide();
+    $('.form-reseter').css("display", "block");
+  })
+  
+  $('#fileupload').on('submit', function(e) {
+    e.preventDefault();
+    if(files.length < 1) return;
+    var sender = $('#SenderEmail').val();
+    var receiver = $('#ReceiverEmail').val();
+    if(sender == "" || receiver == ""){
+      if($('#SenderEmail').attr("required", "") != "required" || $('#ReceiverEmail').attr("required", "") != "required"){
+        $('#SenderEmail').attr("required", "required");
+        $('#ReceiverEmail').attr("required", "required");
+        $(this).submit();
+      }
+      return;
+    };
+    upload_started = true;
+    $.each(files, function(index, file){
+      total_file_size += file.files[0].size
+    })
+    $.ajax({
+      method: 'post',
+      url: 'uploads/set_users',
+      dataType: 'json',
+      data: { sender_email: sender, receiver_email: receiver, total_files: files.length,
+        total_file_size: total_file_size},
+      success: function(res) {
+        $('#form-div').hide();
+        $('.submit').hide();
+        file_sender_id = res.id;
+        setup_upload(res.id)
+      },
+      error: function(jqXHR, exception){
+        raise_error_message(jqXHR, exception);
+      }
+    })
+  });
+  
+  function setup_upload(file_sender){
+    $.each(files, function(index, data_file) {
+      $.each(data_file.files, function(index, file){
+        $.ajax({
+          method: 'post',
+          url: 'uploads',
+          dataType: 'json',
+          data: { filename: file.name, file_size: file.size, file_sender_id: file_sender},
+          success: function(res) {
+            data_file.formData = res;
+            new_files.push(data_file)
+            if(new_files.length == files.length){
+              change_progress(0.1);
+              $('#progress-circle').show();
+              $('.ind_cancel').show();
+              trigger_one_upload();
+            }
+          },
+          error: function(jqXHR, exception) {
+            raise_error_message(jqXHR, exception);
+          }
+        });
+      });
+    });
+  }
+  
+  function trigger_one_upload(){
+    if(new_files.length > 0){
+      file = new_files[0];
+      file_obj = file.files[0]
+      key = file_obj.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file_obj.size.toString().slice(0, 5);
+      id_key = "file_" + file.formData.id;
+      $(`.${key}`).addClass(id_key);
+      $(`.${key}`).removeClass(key);
+      ind_cancel = $(`.${id_key}`).find('div.ind_cancel');
+      ind_cancel.show();
+      ind_cancel.attr("key", id_key);
+      file_sizes[id_key] = {id: file.formData.id, size: file_obj.size};
+      requests[id_key] = file.submit();
+      $('button.cancel').css("display", "block");
+      new_files = new_files.filter(function(obj){
+        file = obj.files[0]
+        return (file.name != file_obj.name && file.size != file_obj.size);
+      });
+    }
+  }
+  
+  function construct_file_display(file){
+    string = "<div class='"+ file.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file.size.toString().slice(0, 5)
+       + " nested-card card bg-light'><div class='card-header'><div class='filename'>"
+       + file.name + "</div><div class='removefile'><button type='button' class='close' aria-label='Close'>"
+       + "<span aria-hidden='true'>&times;</span></button></div></div><div class='card-body'>"
+       + "<div class='row'><div class='col-md-auto'><p class='filesize card-text'>" + bytesToSize(file.size) 
+       + "</p></div><div class='col'><div class='progress'>"
+       + "<div class='progress-bar progress-bar-striped bg-success progress-bar-animated' role='progressbar'>"
+       + "<span class='progress-percent'></span></div></div></div><div class='col-md-auto'><div"
+       + " class='ind_cancel'><button type='button' class='close' aria-label='Close'>"
+       + "<span aria-hidden='true'>&times;</span></button></div></div></div></div></div>";
+    $('#file-detail-div').append(string);
+    $('.submit').css("display", "block");
+  }
+
+  $("body").delegate("div.removefile", "click", function() {
+    var parent_div = $(this).parent().parent();
+    var file_name = parent_div.find('div.filename').html();
+    var file_size = parent_div.find('p.filesize').html();
+    files = files.filter(function(obj){
+      file = obj.files[0]
+      return (file.name != file_name && file.size != file_size);
+    });
+    parent_div.remove();
+    if(files.length < 1){
+      $('.submit').hide();
+    }
+  });
+  
+  function bytesToSize(bytes) {
+    var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 B';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
+    return (bytes / Math.pow(1000, i)).toFixed(1) + ' ' + sizes[i];
+  }
+
+  $("body").delegate("div.nested-card", "mouseenter", function() {
+    var removefile = $(this).find('div.removefile');
+    if(!upload_started){
+      removefile.show();
+    }
+  })
+    
+  $("body").delegate("div.nested-card", "mouseleave", function() {
+    var removefile = $(this).find('div.removefile');
+    removefile.hide();
+  })
+  
+  $("body").delegate("div.ind_cancel", "click", function() {
+    var cancel_id = null;
+    var file_size = null;
+    key = $(this).attr("key");
+    $.each(file_sizes, function(index, size){
+      if(index == key){
+        file_size = size;
+      }
+    })
+    if(file_size !=  null){
+      cancel_id = file_size.id;
+      requests[key].abort();
+      requests[key] = null;
+      completed_upload_size += file_size.size;
+      file_sizes[key] = null;
+    }else{
+      ind_file1 = null;
+      var parent_div = $(this).parent().parent().parent().parent();
+      $.each(new_files, function(index, obj){
+        ind_file1 = obj.files[0];
+        var file_name = parent_div.find('div.filename').html();
+        var file_size = parent_div.find('p.filesize').html();
+        if(ind_file1.name == file_name && bytesToSize(ind_file1.size) == file_size){
+          completed_upload_size += ind_file1.size;
+          cancel_id = obj.formData.id;
+        }
+      });
+      new_files = new_files.filter(function(obj){
+        ind_file2 = obj.files[0]
+        return (ind_file1.name != ind_file2.name && ind_file1.size != ind_file2.size);
+      });
+    }
+    $.ajax({
+      method: 'post',
+      url: 'uploads/cancel_upload',
+      dataType: 'json',
+      data: { file_id: cancel_id },
+      success: function(res) {
+      },
+      error: function(jqXHR, exception){
+        raise_error_message(jqXHR, exception);
+      }
+    })
+    $(this).hide();
+    var count = 0;
+    $.each(requests, function(index, request){
+      if(request != null){
+        count += 1;
+      }
+    })
+    if(!(count > 0)){
+      $('button.cancel').hide();
+      if(completed_upload_size == total_file_size){
+        var done = parseInt(completed_upload_size * 100)/total_file_size;
+        change_progress(done.toFixed(2));
+        $('#progress-percent').html('');
+        $('#progress-percent').addClass("tick-mark");
+        $('button.form-reseter').css("display", "block");
+        change_file_list();
+      }
+    }
+  })
+    
+  function change_progress(value) {
+    if(value > 100.00){
+      value = 100;
+    }
+    $("#progress-circle .progress").each(function() {
+      var left = $(this).find('.progress-left .progress-bar');
+      var right = $(this).find('.progress-right .progress-bar');
+      if (value > 0) {
+        if (value <= 50) {
+          right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+        } else {
+          right.css('transform', 'rotate(180deg)')
+          left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+        }
+      }
+    })
+  }
+
+  function percentageToDegrees(percentage) {
+    return percentage / 100 * 360
+  }
+  
+  function change_file_list(){
+    receiver = $('#ReceiverEmail').val();
+    count = 0
+    $.each(file_sizes, function(index, size){
+      if(size != null){
+        count += 1;
+      }
+    })
+    string = "<div class='card-header bg-light file-stats-div file-stats'><h5>"
+    + count + " files sent to " + receiver +"</h5></div>"
+    $('#file-detail-div').html(string); 
+  }
+  
+  $('.form-reseter').on('click', function(){
+    $(this).hide();
+    reset_everything();
+  })
+  
+  function reset_everything(delay=1000){
+    setTimeout(function(){
+      var form = document.getElementById('fileupload');
+      form.reset();
+      $('#progress-circle').hide();
+      $('#form-div').show();
+      $('#file-detail-div').html('');
+      $('#progress-percent').removeClass("tick-mark");
+      files = [];
+      new_files = [];
+      requests = {};
+      file_sizes = {};
+      total_file_size = 0;
+      total_uploaded_size = 0;
+      completed_upload_size = 0;
+      upload_started = false;
+      file_sender_id = null;
+    }, )
+  }
+  
+  function raise_error_message(jqXHR, exception){
+    if (jqXHR.status === 0 && exception != "abort") {
+      alert('Not connect.\n Verify Network.');
+    } else if (jqXHR.status == 404) {
+      alert('Requested page not found. [404]');
+    } else if (jqXHR.status == 500) {
+      alert('Internal Server Error [500].');
+    } else if (exception === 'parsererror') {
+      alert('Requested JSON parse failed.');
+    } else if (exception === 'timeout') {
+      alert('Time out error.');
+    } else if (exception === 'abort') {
+      console.log('Ajax request aborted.');
+    } else {
+      alert('Uncaught Error.\n' + jqXHR.responseText);
+    }
+    $('.submit').hide();
+    $('.cancel').hide();
+    $('.ind_cancel').hide();
+    $('.form-reseter').show();
+  }
+</script>

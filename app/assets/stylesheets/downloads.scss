@@ -1,0 +1,99 @@
+// Place all the styles related to the Downloads controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+.outer-override{
+  width: 90% !important;
+}
+
+.form-div{
+  max-height: 25em;
+  overflow-y: scroll;
+}
+
+.card .card-header{
+  padding: 0rem 1rem;
+  border-bottom: none;
+}
+
+.card .card-body{
+  padding: 0rem 1rem;
+}
+
+.card .card-footer{
+  background-color: white;
+  padding: 0rem 1rem;
+}
+
+#file-detail-div{
+  padding: 0rem 0.2rem  !important;
+}
+
+#file-detail-div .card{
+  margin: 0.1rem;
+}
+
+.filename{
+  float: left;
+  white-space: nowrap; 
+  width: 90%; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+.nested-card .card-body {
+	background: rgba(0,0,0,.03);
+}
+
+.nested-card .card-body .col{
+  padding: 5px 15px !important;
+}
+
+.download-as-zip{
+	display: block;
+}
+
+// CSS for button
+.btn-override {
+	background-image: linear-gradient(to right, #006175 0%, #00a950 100%);
+	border-radius: 40px;
+  box-sizing: border-box;
+	color: #00a84f;
+	font: 1.125rem 'Oswald', Arial, sans-serif; /*18*/
+	height: 50px;
+	letter-spacing: 1px;
+	margin: 0 auto;
+	padding: 4px;
+	position: relative;
+  text-decoration: none;
+	text-transform: uppercase;
+	width: 150px;
+	z-index: 2;
+}
+
+.btn-override:hover {
+	color: #fff;
+}
+
+.btn-override span {
+	align-items: center;
+	background: #e7e8e9;
+	border-radius: 40px;
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	transition: background .5s ease;
+	width: 100%;
+}
+
+.btn-override:hover span {
+	background: transparent;
+}
+
+.file-stats {
+  text-align: center;
+}
+
+.file-stats h5{
+  font-weight: bold;
+  margin-bottom: 0;
+}

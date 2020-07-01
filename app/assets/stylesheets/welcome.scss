@@ -1,0 +1,115 @@
+// Place all the styles related to the Welcome controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.dynamic-div{
+  border-radius: 5px;
+  background: black;
+  color: white;
+  height: 100%;
+  width: 100%;
+  padding: 20px 50px;
+  text-align: center;
+}
+
+.carousel-caption-override{
+  bottom: auto !important;
+}
+
+.lead-override{
+  padding: 72px 10px;
+}
+
+.button-container{
+  padding: 30px 10px;
+}
+
+.button,
+.button::after {
+  -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.button {
+  background: none;
+  border: 3px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  display: block;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0 auto;
+  padding: 1em 3em;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.button::before,
+.button::after {
+  background: #fff;
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+
+.button:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+/* BUTTON 2 */
+.btn-slider::after {
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 0;
+}
+
+.btn-slider:hover:after {
+  width: 100%;
+}
+
+.outer-override{
+  width: 90% !important;
+}
+
+@media (max-width: 991.98px) {  
+  .col-3 .outer, .col-3 .outer-override, .col-3 .outer-small {
+   display: block;
+   position: relative;
+   top: 0;
+   left: 0;
+   height: 100%;
+   width: 100% !important;
+ }
+
+ .col-3 .middle, .col-3 .middle-small {
+   display: block;
+   vertical-align: middle;
+ }
+
+ .inner-small {
+   margin-left: auto;
+   margin-right: auto;
+   width: 100%;
+ }
+}
+@media (max-width: 991.98px) {
+  .outer{
+  }
+  
+  .dynamic-div {
+    background-color: transparent;
+  }
+  
+  .low-display-color-override{
+    background-color: black;
+    border-radius: 10px;
+  }
+  
+  .btn-slider{
+    width: 50%;
+  }
+ }

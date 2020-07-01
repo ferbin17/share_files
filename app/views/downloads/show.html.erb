@@ -1,0 +1,55 @@
+<div class="outer outer-override">
+  <div class="middle">
+    <div class="inner">
+      <div class="form-div">
+        <div class="form-group" id="file-detail-holder">
+          <div class="card mb-3">
+            <div class="card-header bg-light file-stats">
+              <h5><%= @uploads.count %> Files</h5>
+            </div>
+            <div id="file-detail-div" class="card-body">
+              <% @uploads.each do |upload| %>
+                <div class="nested-card card bg-light">
+                  <div class="card-header">
+                    <div class="filename"><%= upload.filename %></div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-auto">
+                        <p class="filesize card-text"><%= bytesToSize(upload.file_size) %></p>
+                      </div>
+                      <div class="col">
+                      </div>
+                      <div class="col-md-auto">
+                        <div class="ind_download">
+                          <%= link_to download_download_path(upload.uuid), target: "_blank" do %>
+                            <i class="fa fa-download"></i>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col">
+                  <%= link_to download_as_zip_download_path(@file_sender.uuid), target: "_blank", class: "download-as-zip btn-2 purple-white" do %>
+                    <span>Download as ZIP</span>
+                  <% end %>
+                </div>
+              </div>
+            </div>          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  change_active_tab()
+  function change_active_tab(){
+    $('.nav-item').removeClass("active");
+  }
+</script>
