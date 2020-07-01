@@ -50,7 +50,7 @@
                   <div class="carousel-inner">
                     <% @files.each_with_index do |file, index| %>
                       <% url = @text[file].present? ? @text[file]['url'] : @text['default']['url'] %>
-                      <%= link_to("https://#{url}", html_options = {target: "_blank", class: 'navbar-brand'}) do %>
+                      <%= link_to("https://#{url}", html_options = {target: "_blank", class: ''}) do %>
                         <% if @files.first == file %>
                           <div class="carousel-item active">
                         <% else %>
