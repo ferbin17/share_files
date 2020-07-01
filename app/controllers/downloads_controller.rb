@@ -40,6 +40,7 @@ class DownloadsController < ApplicationController
       if @upload.present?
         file_sender = @upload.file_sender
         if file_sender.expiry_date < Time.now
+          p "1111"
           file_sender.destroy
           flash[:danger] = "Link expired"
           redirect_to :root

@@ -96,3 +96,20 @@
    width: 100%;
  }
 }
+@media (max-width: 991.98px) {
+  .outer{
+  }
+  
+  .dynamic-div {
+    background-color: transparent;
+  }
+  
+  .low-display-color-override{
+    background-color: black;
+    border-radius: 10px;
+  }
+  
+  .btn-slider{
+    width: 50%;
+  }
+ }
