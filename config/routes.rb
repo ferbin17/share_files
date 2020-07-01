@@ -17,6 +17,6 @@ Rails.application.routes.draw do
       get 'download_as_zip'
     end
   end
-  # get '*unmatched_route', to: 'application#raise_not_found'
+  get '*unmatched_route', to: 'application#raise_not_found'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
