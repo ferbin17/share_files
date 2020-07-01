@@ -2,7 +2,6 @@ class Upload < ApplicationRecord
   belongs_to :file_sender
   validates_presence_of :filename, :path, :file_size
   after_create :set_uuid
-  after_save :delete_temp_file, if: Proc.new{|upload| upload.upload_file.present? && File.exist?(upload.path)}
   after_destroy :delete_upload_file
   has_attached_file :upload_file
   do_not_validate_attachment_file_type :upload_file
