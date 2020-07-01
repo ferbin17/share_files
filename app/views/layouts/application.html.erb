@@ -49,29 +49,32 @@
                   </ol>
                   <div class="carousel-inner">
                     <% @files.each_with_index do |file, index| %>
-                      <% if @files.first == file %>
+                      <% url = @text[file].present? ? @text[file]['url'] : @text['default']['url'] %>
+                      <%= link_to("https://#{url}", html_options = {target: "_blank", class: 'navbar-brand'}) do %>
+                        <% if @files.first == file %>
                           <div class="carousel-item active">
                         <% else %>
                           <div class="carousel-item">
                         <% end %>
-                        <img src="<%= image_url("carousel/#{file}") %>" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                          <h2 class="display-4">
-                            <% if @text[file].present? %>
-                              <%= @text[file]["title"] %>
-                            <% else %>
-                              <%= @text['default']['title'] %>
-                            <% end %>
-                          </h2>
-                          <p class="lead">
-                            <% if @text[file].present? %>
-                              <%= @text[file]["description"] %>
-                            <% else %>
-                              <%= @text['default']['description'] %>
-                            <% end %>
-                          </p>
-                        </div>
-                      </div>
+                            <img src="<%= image_url("carousel/#{file}") %>" class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                              <h2 class="display-4">
+                                <% if @text[file].present? %>
+                                  <%= @text[file]["title"] %>
+                                <% else %>
+                                  <%= @text['default']['title'] %>
+                                <% end %>
+                              </h2>
+                              <p class="lead">
+                                <% if @text[file].present? %>
+                                  <%= @text[file]['description'] %>
+                                <% else %>
+                                  <%= @text['default']['description'] %>
+                                <% end %>
+                              </p>
+                            </div>
+                          </div>
+                      <% end %>
                     <% end %>
                   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
