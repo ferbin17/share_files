@@ -1,10 +1,10 @@
 mail_config:
-  address: "smtp.gmail.com"
+  address: "address" # smtp.gmail.com if gmail
   port: 587
-  domain: "smtp.gmail.com"
-  user_name: "ferbinupworkprojects@gmail.com"
-  password: "upwork@ferbin"
+  domain: "domain" # smtp.gmail.com if gmail
+  user_name: "example@example.com"
+  password: "password"
   authentication: "plain"
   enable_starttls_auto: true
 host_config:
-  host_url: "share-files-app.herokuapp.com"
+  host_url: "domain" #without https://www.

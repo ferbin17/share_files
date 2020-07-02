@@ -77,6 +77,10 @@ Change directory to project folder
   Open database.yml   
   Change the database name, username and password to your's.  
   
+- Logo  
+  Goto app/assets/images/ of project  
+  Replace the logo.png with your logo.  
+  
 - Advertisement Settings if needed  
   Goto app/assets/images/carousel/ of project  
   Place your advertisement images in here  

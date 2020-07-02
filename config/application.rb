@@ -9,7 +9,6 @@ module ShareFile
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
-    config.hosts << ".ngrok.io"
     config.assets.initialize_on_precompile = false
     
     #sidekiq configuration

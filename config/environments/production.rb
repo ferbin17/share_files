@@ -65,7 +65,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
-  host =  AppConfig["host_config"]["host_url"] #replace with your own url
+  host =  AppConfig["host_config"]["host_url"]
   config.action_mailer.default_url_options = { host: host }
   
   # SMTP settings for gmail
@@ -107,7 +107,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   config.hosts << "localhost"
   config.hosts << AppConfig["host_config"]["host_url"]
-  ENV["SHARE_FILE_DATABASE_PASSWORD"] = "iamaunited@18"
+  ENV["SHARE_FILE_DATABASE_PASSWORD"] = "db_password"
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
