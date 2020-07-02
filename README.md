@@ -13,27 +13,27 @@ Requirements/Dependencies
 Requirements/Dependencies installations
 -----------------
 Before we set up the application, we need to install the requirements first.
-- RVM
-  RVM is a Optional installation.
-  You can either use RVM or install ruby seperately.
-  RVM makes ruby installation and management easier
-  [RVM installation steps](https://rvm.io/rvm/install)
-- Ruby:
-  If using RVM,
+- RVM  
+  RVM is a Optional installation.  
+  You can either use RVM or install ruby seperately.  
+  RVM makes ruby installation and management easier  
+  [RVM installation steps](https://rvm.io/rvm/install)  
+- Ruby:  
+  If using RVM,  
   ```sh
   rvm install 2.6.3 (or any version >= 2.6.3).
   ```
   
-  If you are not using RVM,
+  If you are not using RVM,  
   ```sh
   $ sudo apt update
   $ sudo apt install ruby-full
-  ```
+  ```  
   [Ruby installation steps](https://www.ruby-lang.org/en/documentation/installation/)
 
-- Redis
-  [Redis installation steps](https://redis.io/topics/quickstart)
-  Note: Check if redis-server is running wihtout problem by steps from above link.
+- Redis  
+  [Redis installation steps](https://redis.io/topics/quickstart)  
+  Note: Check if redis-server is running wihtout problem by steps from above link.  
 
 Setting up application
 -----------------
