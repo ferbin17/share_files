@@ -3,22 +3,22 @@ ShareFiles
 ==============
 ShareFiles is a application that let you share files over internet.
 
-Requirements/Dependencies
+## Requirements/Dependencies
 -----------------
-- RVM (Optional)
-- Ruby: 2.6 or above.
-- Rails: 6.0 or above
-- Redis: 4.0+
+- #### RVM (Optional)
+- #### Ruby: 2.6 or above.
+- #### Rails: 6.0 or above
+- #### Redis: 4.0+
 
-Requirements/Dependencies installations
+## Requirements/Dependencies installations
 -----------------
 Before we set up the application, we need to install the requirements first.
-- RVM  
+- ### RVM  
   RVM is a Optional installation.  
   You can either use RVM or install ruby seperately.  
   RVM makes ruby installation and management easier  
   [RVM installation steps](https://rvm.io/rvm/install)  
-- Ruby:  
+- ### Ruby:  
   If using RVM,  
   ```sh
   rvm install 2.6.3
@@ -32,15 +32,15 @@ Before we set up the application, we need to install the requirements first.
   ```  
   [Ruby installation steps](https://www.ruby-lang.org/en/documentation/installation/)
 
-- Redis  
+- ### Redis  
   [Redis installation steps](https://redis.io/topics/quickstart)  
   Note: Check if redis-server is running wihtout problem by steps from above link.  
 
-Setting up application
+## Setting up application
 -----------------
 Change directory to project folder
 
-- Bundler install  
+- ### Bundler install  
   [Bundler Gem](https://bundler.io/)  
   run the commands  
   ```sh
@@ -48,13 +48,13 @@ Change directory to project folder
   $ bundle install
   ```
   
-- Sidekiq  
+- ### Sidekiq  
   [Sidekiq Gem](https://github.com/mperham/sidekiq)  
   ```sh
   $ bundle exec sidekiq
   ```
   
-- Whenever  
+- ### Whenever  
   [Whenever Gem](https://github.com/javan/whenever)  
   ```sh
   $ bundle exec wheneverize .
@@ -62,26 +62,26 @@ Change directory to project folder
   ```
   (Pullstop is mandatory)  
   
-- Mail Settings  
+- ### Mail Settings  
   Goto config folder of the project  
   Open app_config.yml  
   Change the mail settings from default to your's.  
  
-- Host Settings  
+- ### Host Settings  
   Goto config folder of the project  
   Open app_config.yml  
   Change the host settings from default to your's.  
   
-- Database Configuration  
+- ### Database Configuration  
   Goto config folder of project  
   Open database.yml   
   Change the database name, username and password to your's.  
   
-- Logo  
+- ### Set up the logo  
   Goto app/assets/images/ of project  
   Replace the logo.png with your logo.  
   
-- Advertisement Settings if needed  
+- ### Advertisement Settings if needed  
   Goto app/assets/images/carousel/ of project  
   Place your advertisement images in here  
   Open carousel.yml  
@@ -94,7 +94,7 @@ Change directory to project folder
   ```  
   
 Optionals:  
-- Puma configuration  
+- ### Puma configuration  
   Goto config folder of project  
   Open puma.rb  
   Change app_dir value to absolute path of project folder   
@@ -102,13 +102,13 @@ Optionals:
     app_dir = 'home/user/some_folder/some_folder/some_folder/project_folder'
   ```
   
-  # Goto project folder
+  #### Goto project folder
   Create folder services  
   Create folder services/logs  
   Create folder services/pids  
   Create folder services/sockets  
 
-  # as root user  
+  #### as root user  
   copy share_file_app.service to /etc/systemd/system/share_file_app.service  
   ```sh
     $ systemctl daemon-reload  
@@ -116,18 +116,18 @@ Optionals:
     $ systemctl start share_file_app.service  
   ```
   
-  # Check status  
+  #### Check status  
   ```sh
     $ systemctl status share_file_app.service  
   ```
   check errors with "journalctl -xe" or check for logs in services folder  
 
-  # Stop  
+  #### Stop  
   ```sh
     $ systemctl status share_file_app.service  
   ```
   
-  # Restart  
+  #### Restart  
   ```sh
     $ systemctl restart share_file_app.service  
   ```
@@ -136,7 +136,7 @@ Optionals:
     $ touch tmp/restart.txt  
   ```
   
-  - Service configuration  
+- ### Service configuration  
   Open share_file_app.service file  
   Change the value User to your username  
   ```ruby
