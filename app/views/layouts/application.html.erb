@@ -43,19 +43,19 @@
                       <% if @files.first == file %>
                         <li data-target="#carouselExampleIndicators" data-slide-to="<%= index %>" class="active"></li>
                       <% else %>
-                        <li data-target="#carouselExampleIndicators" data-slide-to="<%= index %>"</li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="<%= index %>"></li>
                       <% end %>
                     <% end %>
                   </ol>
                   <div class="carousel-inner">
                     <% @files.each_with_index do |file, index| %>
                       <% url = @text[file].present? ? @text[file]['url'] : @text['default']['url'] %>
-                      <%= link_to("https://#{url}", html_options = {target: "_blank", class: ''}) do %>
-                        <% if @files.first == file %>
-                          <div class="carousel-item active">
-                        <% else %>
-                          <div class="carousel-item">
-                        <% end %>
+                      <% if @files.first == file %>
+                        <div class="carousel-item active">
+                      <% else %>
+                        <div class="carousel-item">
+                      <% end %>
+                          <%= link_to("https://#{url}", html_options = {target: "_blank", class: ''}) do %>
                             <img src="<%= image_url("carousel/#{file}") %>" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
                               <h2 class="display-4">
@@ -73,8 +73,8 @@
                                 <% end %>
                               </p>
                             </div>
-                          </div>
-                      <% end %>
+                          <% end %>
+                        </div>
                     <% end %>
                   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
