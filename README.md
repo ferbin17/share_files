@@ -76,10 +76,12 @@ Change directory to project folder
   Place your advertisement images in here  
   Open carousel.yml  
   Add the new advertisement image details in the format  
+  ```ruby
     file_name:  
       title: "Title"  
       description: "Description"  
       url: "www.example.com"  
+  ```
       
 ----
 Copyright © 2017 ShareFiles
