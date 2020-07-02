@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root to: 'welcome#index'
+  resources :file_senders, except: [:index, :new, :edit, :update, :destroy] do
+  end
   resources :uploads, except: [:new, :edit, :update, :destroy, :show] do 
     collection do 
       post 'chunk_create'
@@ -15,6 +17,6 @@ Rails.application.routes.draw do
       get 'download_as_zip'
     end
   end
-  # get '*unmatched_route', to: 'application#raise_not_found'
+  get '*unmatched_route', to: 'application#raise_not_found'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

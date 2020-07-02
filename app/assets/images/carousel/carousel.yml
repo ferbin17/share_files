@@ -1,0 +1,28 @@
+carousel_1.jpg:
+  title: "First Slide"
+  description: "This is a description for the first slide."
+  url: "www.test1.com"
+carousel_2.jpg:
+  title: "Second Slide"
+  description: "This is a description for the first slide."
+  url: "www.test2.com"
+carousel_3.jpg:
+  title: "Third Slide"
+  description: "This is a description for the first slide."
+  url: "www.test3.com"
+carousel_4.jpg:
+  title: "Fourth Slide"
+  description: "This is a description for the first slide."
+  url: "www.test4.com"
+carousel_5.jpg:
+  title: "Fifth Slide"
+  description: "This is a description for the first slide."
+  url: "www.test5.com"
+carousel_6.jpg:
+  title: "Sixth Slide"
+  description: "This is a description for the first slide."
+  url: "www.test6.com"
+default:
+  title: "Default Title"
+  description: "This is a default description"
+  url: "www.test.com"

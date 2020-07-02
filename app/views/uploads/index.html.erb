@@ -1,58 +1,65 @@
-<div class="container">
-  <div class="row form-div">
-    <div class="no-col">
-      <div class="form-group" id="file-detail-holder">
-        <div class="card mb-3">
-          <%= form_tag Upload.new, multipart: true, id: 'fileupload' do %>
-            <div id="file-detail-div" class="card-header bg-light"></div>
-            <div class="card-body">
-              <div id="form-div">
-                <div class="form-group">
-                  <%= email_field_tag :sender_email, "" ,{required: true, autocomplete: "off", id: "SenderEmail",
-                    class:"form-control" , placeholder: "Enter sender email" }  %>
+<div class="outer outer-override outer-small">
+  <div class="middle middle-small">
+    <div class="inner inner-small">
+      <div class="form-div">
+        <div class="form-group" id="file-detail-holder">
+          <div class="card mb-3">
+            <%= form_tag @file_sender, multipart: true, id: 'fileupload' do %>
+              <div id="file-detail-div" class="card-header bg-light"></div>
+              <div class="card-body">
+                <div id="form-div">
+                  <div class="form-group">
+                    <%= email_field_tag :sender_email, @sender.try(:email_id), {required: true, autocomplete: "off", id: "SenderEmail",
+                        class:"form-control" , placeholder: "Enter sender email" } %>
+                  </div>
+                  <div class="form-group">
+                    <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off", id: "ReceiverEmail",
+                        class:"form-control" , placeholder: "Enter receiver email" } %>
+                  </div>
+                  <div class="form-group">
+                    <label for="FileUploader" class="uploader-button btn-2 purple-white">upload</label>
+                    <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <%= email_field_tag :send_to_email, "" ,{required: true, autocomplete: "off", id: "ReceiverEmail",
-                    class:"form-control" , placeholder: "Enter receiver email" }  %>
-                </div>
-                <div class="form-group">
-                  <label for="FileUploader" class="btn-2 purple-white">upload</label>
-                  <%= file_field_tag :upload, id: "FileUploader", class:"", multiple: true %>
-                </div>
-              </div>
-              <div id="progress-circle">
-                <div class="progress mx-auto" data-value='0'>
-                  <span class="progress-left">
-                    <span class="progress-bar border-danger"></span>
-                  </span>
-                  <span class="progress-right">
-                    <span class="progress-bar border-danger"></span>
-                  </span>
-                  <div class="progress-value w-100 h-100 rounded-circle d-flex 
-                    align-items-center justify-content-center">
-                    <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                <div id="progress-circle">
+                  <div class="progress mx-auto" data-value='0'>
+                    <span class="progress-left">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <span class="progress-right">
+                      <span class="progress-bar border-danger"></span>
+                    </span>
+                    <div class="progress-value w-100 h-100 rounded-circle d-flex 
+                        align-items-center justify-content-center">
+                        <div id="progress-percent" class="ont-weight-bold">0.1%</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="card-footer">
-              <div class="row">
-                <div class="col">
-                  <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
-                  <button type="button" class="cancel btn-2 purple-white"><span>Cancel</span></button>
-                  <button type="button" class="form-reseter btn-2 purple-white">
-                    <span>Send a another one</span>
-                  </button>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
+                    <button type="button" class="cancel btn-2 purple-white"><span>Cancel</span></button>
+                    <button type="button" class="form-reseter btn-2 purple-white">
+                      <span>Send a another one</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>          
+            <% end %>          
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 <script>
+  change_active_tab()
+  function change_active_tab(){
+    $('.nav-item').removeClass("active");
+    $('.upload-page').addClass("active");
+  }
   var files = [];
   var new_files = [];
   var requests = {};
@@ -89,7 +96,7 @@
       if(Math.round(done) > 100.0 || Math.round(done) == 100.0){
         $('button.cancel').hide();
         $.each(file_sizes, function(index, size){
-          if(size == data.total){
+          if(size.size == data.total){
             key = index;
           }
         })
@@ -115,7 +122,11 @@
       }
       if(completed_upload_size == total_file_size){
         $('#progress-percent').html('');
-        $('#progress-percent').addClass("tick-mark");
+        string = "<svg class='checkmark' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'>"
+          + "<circle class='checkmark__circle' cx='26' cy='26' r='25' fill='none'/>"
+          + "<path class='checkmark__check' fill='none' d='M14.1 27.2l7.1 7.2 16.7-16.8'/></svg>";
+        $('#progress-percent').html(string);
+        // $('#progress-percent').addClass("tick-mark");
         $('button.form-reseter').css("display", "block");
         change_file_list();
       }
@@ -238,12 +249,14 @@
   function construct_file_display(file){
     string = "<div class='"+ file.name.replace(/[^a-zA-Z\d]/g, '').slice(0, 5) + file.size.toString().slice(0, 5)
        + " nested-card card bg-light'><div class='card-header'><div class='filename'>"
-       + file.name + "</div><div class='removefile'>X</div></div><div class='card-body'>"
+       + file.name + "</div><div class='removefile'><button type='button' class='close' aria-label='Close'>"
+       + "<span aria-hidden='true'>&times;</span></button></div></div><div class='card-body'>"
        + "<div class='row'><div class='col-md-auto'><p class='filesize card-text'>" + bytesToSize(file.size) 
        + "</p></div><div class='col'><div class='progress'>"
        + "<div class='progress-bar progress-bar-striped bg-success progress-bar-animated' role='progressbar'>"
        + "<span class='progress-percent'></span></div></div></div><div class='col-md-auto'><div"
-       + " class='ind_cancel'>X</div></div></div></div></div>";
+       + " class='ind_cancel'><button type='button' class='close' aria-label='Close'>"
+       + "<span aria-hidden='true'>&times;</span></button></div></div></div></div></div>";
     $('#file-detail-div').append(string);
     $('.submit').css("display", "block");
   }
@@ -374,7 +387,8 @@
         count += 1;
       }
     })
-    string = count + " files sent to " + receiver;
+    string = "<div class='card-header bg-light file-stats-div file-stats'><h5>"
+    + count + " files sent to " + receiver +"</h5></div>"
     $('#file-detail-div').html(string); 
   }
   
