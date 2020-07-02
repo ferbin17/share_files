@@ -57,31 +57,95 @@ Change directory to project folder
 - Whenever  
   [Whenever Gem](https://github.com/javan/whenever)  
   ```sh
-  $ bundle exec wheneverize . (Pullstop is mandatory)
+  $ bundle exec wheneverize .
   $ whenever --update-crontab
   ```
+  (Pullstop is mandatory)  
   
- - Mail Settings  
-  Goto config folder in the project  
+- Mail Settings  
+  Goto config folder of the project  
   Open app_config.yml  
   Change the mail settings from default to your's.  
  
- - Host Settings  
-  Goto config folder in the project  
+- Host Settings  
+  Goto config folder of the project  
   Open app_config.yml  
   Change the host settings from default to your's.  
-
- - Advertisement Settings if needed  
+  
+- Database Configuration  
+  Goto config folder of project  
+  Open database.yml   
+  Change the database name, username and password to your's.  
+  
+- Advertisement Settings if needed  
   Goto app/assets/images/carousel/ of project  
   Place your advertisement images in here  
   Open carousel.yml  
   Add the new advertisement image details in the format  
   ```ruby
-    file_name:  
+    file_name_including_extension:  
       title: "Title"  
       description: "Description"  
       url: "www.example.com"  
+  ```  
+  
+Optionals:  
+- Puma configuration  
+  Goto config folder of project  
+  Open puma.rb  
+  Change app_dir value to absolute path of project folder   
+  ```ruby
+    app_dir = 'home/user/some_folder/some_folder/some_folder/project_folder'
   ```
-      
+  
+  # Goto project folder
+  Create folder services  
+  Create folder services/logs  
+  Create folder services/pids  
+  Create folder services/sockets  
+
+  # as root user  
+  copy share_file_app.service to /etc/systemd/system/share_file_app.service  
+  ```sh
+    $ systemctl daemon-reload  
+    $ systemctl enable share_file_app.service  
+    $ systemctl start share_file_app.service  
+  ```
+  
+  # Check status  
+  ```sh
+    $ systemctl status share_file_app.service  
+  ```
+  check errors with "journalctl -xe" or check for logs in services folder  
+
+  # Stop  
+  ```sh
+    $ systemctl status share_file_app.service  
+  ```
+  
+  # Restart  
+  ```sh
+    $ systemctl restart share_file_app.service  
+  ```
+  or
+  ```sh  
+    $ touch tmp/restart.txt  
+  ```
+  
+  - Service configuration  
+  Open share_file_app.service file  
+  Change the value User to your username  
+  ```ruby
+    User=username
+  ```
+  Change the value of WorkingDirectory to the absolute path of project folder
+  ```ruby
+    WorkingDirectory=/share_file/
+  ```
+  
+  Change the /share_file/ of ExecStart with the absolute path of project folder  
+  ```ruby
+    ExecStart=/usr/local/rvm/wrappers/ruby-2.6.3@share_files/puma -C /share_file/ ../config.ru
+  ```   
 ----
 Copyright © 2017 ShareFiles

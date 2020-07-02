@@ -1,0 +1,42 @@
+# /etc/systemd/system/share_file_app.service
+# After installing or making changes to share_file_app.service
+# systemctl daemon-reload
+# Enable so it starts on boot
+# systemctl enable share_file_app.service
+# Initial start up.
+# systemctl start share_file_app.service
+# Check status
+# systemctl status share_file_app.service
+# A normal restart. Warning: listeners sockets will be closed
+# while a new puma process initializes.
+# systemctl restart share_file_app.service
+
+[Unit]
+Description=Puma HTTP Server
+After=network.target
+
+[Service]
+# Foreground process (do not use --daemon in ExecStart or config.rb)
+Type=forking
+
+# Preferably configure a non-privileged user
+User=user
+
+# The path to the your application code root directory.
+WorkingDirectory=/share_file/
+
+# Helpful for debugging socket activation, etc.
+# Environment=PUMA_DEBUG=1
+
+# an absolute URL to puma. For example /usr/local/bin/puma
+ExecStart=/usr/local/rvm/wrappers/ruby-2.6.3@share_files/puma -C /share_file/ ../config.ru
+
+# Variant: Use `bundle exec --keep-file-descriptors puma` instead of binstub
+# Variant: Specify directives inline.
+# ExecStart=/<FULLPATH>/puma -b tcp://0.0.0.0:9292 -b ssl://0.0.0.0:9293?key=key.pem&cert=cert.pem
+
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
