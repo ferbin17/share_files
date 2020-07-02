@@ -2,17 +2,75 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css" media="screen">
+      body{
+        background-color: black;
+        color: white;
+      }
+
+      .button, .button::after {
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+      }
+
+      .button {
+        text-decoration: none;
+        text-align: center;
+        background: none;
+        border: 3px solid #000;
+        border-radius: 5px;
+        color: #000;
+        display: block;
+        font-size: 1em;
+        font-weight: bold;
+        margin: 0 auto;
+        padding: 0.5em 2em;
+        position: relative;
+        text-transform: uppercase;
+        width: 200px;
+        float: left;
+      }
+
+      .button::before,
+      .button::after {
+        background: #000;
+        content: '';
+        position: absolute;
+        z-index: -1;
+      }
+
+      .button:hover {
+        color: #000;
+        text-decoration: none;
+      }
+
+      /* BUTTON 2 */
+      .btn-slider::after {
+        height: 100%;
+        left: 0;
+        top: 0;
+        width: 0;
+      }
+
+      .btn-slider:hover:after {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <h1>Hello <%= @receiver.email_id %></h1>
     <p>
-      You have sent <% @file.total_files %> files to <%= @sender.email_id %> through ShareFile which is near to its expiry date.
-      The file will be automatically deleted on <%= @file.expiry_date %>
+      <% word = @file.total_files > 1 ? "files" : "file" %>
+      You have sent <strong><% @file.total_files %></strong> <%= word %> to <strong><%= @sender.email_id %></strong> through ShareFiles which is near to its expiry date.
+      The file will be automatically deleted on <strong><%= @file.expiry_date.to_formatted_s(:db) %></strong>.
       <br>
-      Please click on the link below to download the file:<br> 
-      <%= link_to "Download", @url %><br>
+      Please click on the link below to download the file:<br>
+      <%= link_to "Download", @url, class: "button btn-silder" %>
     </p>
-    <p>Warm regards,
-    ShareFile Software Tech</p>
+    <br>
+    <p>Warm regards,<br>
+    ShareFiles Software Tech</p>
   </body>
 </html>

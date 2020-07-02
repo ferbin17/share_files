@@ -10,6 +10,9 @@ class PaperclipCreateWoker
         file_sender.update(uploaded_files: file_sender.uploaded_files + 1, uploaded_size: file_sender.uploaded_size + upload.uploaded_size)
       }
       File.delete(upload.path) if File.exist?(upload.path)
+      if file_sender.total_files == file_sender.uploaded_files
+        DownloadMailWorker.perform_async(file_sender.id)
+      end
     end
   end
 end

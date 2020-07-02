@@ -93,9 +93,10 @@ Change directory to project folder
       url: "www.example.com"  
   ```  
   
-Optionals:  
+## Optionals:  
 - ### Puma configuration  
   Goto config folder of project  
+  Rename puma.rb.example to puma.rb  
   Open puma.rb  
   Change app_dir value to absolute path of project folder   
   ```ruby
@@ -151,5 +152,11 @@ Optionals:
   ```ruby
     ExecStart=/usr/local/rvm/wrappers/ruby-2.6.3@share_files/puma -C /share_file/ ../config.ru
   ```   
+  
+  ### Social Media links  
+  Goto config folder of project  
+  Open app_config.yml  
+  Change values of social media url.  
+
 ----
 Copyright © 2017 ShareFiles

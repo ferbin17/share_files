@@ -7,6 +7,7 @@ class UploadMailer < ApplicationMailer
     @receiver = @file.receiver
     @url = AppConfig["host_config"]["host_url"] + '/downloads/' + @file.uuid
     @file.update(receiver_mail_sent: true)
+    @sender.update(sent_count: @sender.sent_count + 1)
     mail(to: @receiver.email_id, subject: 'ShareFile download link')
   end
   

@@ -3,6 +3,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
     create_table :users do |t|
       t.string :email_id
       t.integer :upload_count, default: 0
+      t.integer :sent_count, default: 0
       t.timestamps
     end
   end

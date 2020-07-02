@@ -48,7 +48,7 @@ directory app_dir
 rackup "#{app_dir}/config.ru"
 
 # Shared directory setup for service logs and sockets. subfolders logm pids and sockets should be present
-shared_dir = "#{app_dir}/shared"
+shared_dir = "#{app_dir}/services"
 bind "unix://#{shared_dir}/sockets/puma.sock"
 stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
 pidfile "#{shared_dir}/pids/puma.pid"

@@ -8,3 +8,9 @@ mail_config:
   enable_starttls_auto: true
 host_config:
   host_url: "domain" #without https://www.
+links:
+  facebook: "www.facebook.com"
+  twitter: "www.twitter.com"
+  linkedin: "www.linkedin.com"
+  github: "www.github.com"
+  blog: ""

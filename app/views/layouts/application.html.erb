@@ -98,20 +98,16 @@
 
 		<footer class="footer-distributed">
 			<div class="footer-right">
-				<a href="#"><i class="fa fa-facebook"></i></a>
-				<a href="#"><i class="fa fa-twitter"></i></a>
-				<a href="#"><i class="fa fa-linkedin"></i></a>
-				<a href="#"><i class="fa fa-github"></i></a>
+				<a href="<%= AppConfig['links']['facebook'] %>"><i class="fa fa-facebook"></i></a>
+				<a href="<%= AppConfig['links']['twitter'] %>"><i class="fa fa-twitter"></i></a>
+				<a href="<%= AppConfig['links']['linkedin'] %>"><i class="fa fa-linkedin"></i></a>
+				<a href="<%= AppConfig['links']['github'] %>"><i class="fa fa-github"></i></a>
 			</div>
 
 			<div class="footer-left">
 				<p class="footer-links">
           <%= link_to "Home", root_path, class: 'link-1' %>
-					<a href="#">Blog</a>
-					<a href="#">Pricing</a>
-					<a href="#">About</a>
-					<a href="#">Faq</a>
-					<a href="#">Contact</a>
+					<a href="<%= AppConfig['links']['blog'] %>">Blog</a>
 				</p>
 				<p>ShareFiles &copy; 2020</p>
 			</div>

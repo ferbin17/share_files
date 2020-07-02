@@ -46,9 +46,6 @@ class UploadsController < ApplicationController
       if @upload.uploaded_size == @upload.file_size
         PaperclipCreateWoker.perform_async(@upload.id)
       end
-      if @file_sender.total_files == @file_sender.uploaded_files
-        DownloadMailWorker.perform_async(@file_sender.id)
-      end
       render json: { id: @upload.id, filename: @upload.filename, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
     else
       render json: { error: @upload.errors }, status: 422
