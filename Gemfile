@@ -57,4 +57,6 @@ gem 'psych'
 gem 'jquery-fileupload-rails'
 gem "paperclip"
 gem 'rubyzip'
+gem 'sidekiq'
+gem 'whenever', require: false
 gem 'hirb'

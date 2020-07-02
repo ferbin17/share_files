@@ -37,16 +37,18 @@ class UploadsController < ApplicationController
   def chunk_create
     file = params[:upload]
     @upload = Upload.find_by(id: params[:id]) 
+    @file_sender = @upload.file_sender
     @upload.uploaded_size += file.size
     if @upload.save
       File.open(@upload.path, 'ab') { |f|
         f.write(file.read)
-        if @upload.uploaded_size == @upload.file_size
-          @upload.update(upload_file: f)
-          @file_sender = @upload.file_sender
-          @file_sender.update(uploaded_files: @file_sender.uploaded_files + 1, uploaded_size: @file_sender.uploaded_size + @upload.uploaded_size)
-        end
       }
+      if @upload.uploaded_size == @upload.file_size
+        PaperclipCreateWoker.perform_async(@upload.id)
+      end
+      if @file_sender.total_files == @file_sender.uploaded_files
+        DownloadMailWorker.perform_async(@file_sender.id)
+      end
       render json: { id: @upload.id, filename: @upload.filename, uploaded_size: @upload.uploaded_size, file_size: @upload.file_size }
     else
       render json: { error: @upload.errors }, status: 422
