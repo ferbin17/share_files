@@ -40,46 +40,46 @@ Setting up application
 -----------------
 Change directory to project folder
 
-- Bundler install
-  [Bundler Gem](https://bundler.io/)
-  run the commands
+- Bundler install  
+  [Bundler Gem](https://bundler.io/)  
+  run the commands  
   ```sh
   $ gem install bundler
   $ bundle install
   ```
   
-- Sidekiq
-  [Sidekiq Gem](https://github.com/mperham/sidekiq)
+- Sidekiq  
+  [Sidekiq Gem](https://github.com/mperham/sidekiq)  
   ```sh
   $ bundle exec sidekiq
   ```
   
-- Whenever
-  [Whenever Gem](https://github.com/javan/whenever)
+- Whenever  
+  [Whenever Gem](https://github.com/javan/whenever)  
   ```sh
   $ bundle exec wheneverize . (Pullstop is mandatory)
   $ whenever --update-crontab
   ```
   
- - Mail Settings
-  Goto config folder in the project
-  Open app_config.yml
-  Change the mail settings from default to your's.
+ - Mail Settings  
+  Goto config folder in the project  
+  Open app_config.yml  
+  Change the mail settings from default to your's.  
  
- - Host Settings
-  Goto config folder in the project
-  Open app_config.yml
-  Change the host settings from default to your's.
+ - Host Settings  
+  Goto config folder in the project  
+  Open app_config.yml  
+  Change the host settings from default to your's.  
 
- - Advertisement Settings if needed
-  Goto app/assets/images/carousel/ of project
-  Place your advertisement images in here
-  Open carousel.yml
-  Add the new advertisement image details in the format
-    file_name:
-      title: "Title"
-      description: "Description"
-      url: "www.example.com"
+ - Advertisement Settings if needed  
+  Goto app/assets/images/carousel/ of project  
+  Place your advertisement images in here  
+  Open carousel.yml  
+  Add the new advertisement image details in the format  
+    file_name:  
+      title: "Title"  
+      description: "Description"  
+      url: "www.example.com"  
       
 ----
 Copyright © 2017 ShareFiles
