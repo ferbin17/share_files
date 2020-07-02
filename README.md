@@ -21,8 +21,9 @@ Before we set up the application, we need to install the requirements first.
 - Ruby:  
   If using RVM,  
   ```sh
-  rvm install 2.6.3 (or any version >= 2.6.3).
+  rvm install 2.6.3
   ```
+  (or any version >= 2.6.3)  
   
   If you are not using RVM,  
   ```sh
