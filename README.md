@@ -48,6 +48,17 @@ Change directory to project folder
   $ bundle install
   ```
   
+- ### Yarn  
+  ```sh
+  yarn
+  ```
+  
+- ### Database and Migrations  
+  Run rake taks for database creation and migrations  
+  ```sh
+  rake db:create
+  rake db:migrate
+  ```
 - ### Sidekiq  
   [Sidekiq Gem](https://github.com/mperham/sidekiq)  
   ```sh
