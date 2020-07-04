@@ -10,10 +10,6 @@ class FileSender < ApplicationRecord
   scope :active, -> { where(is_expired: false) }
   scope :delete_mail_not_sent, -> { where(receiver_delete_mail_sent: false, sender_delete_mail_sent: false) }
   
-  def destroy
-    self.update(is_expired: true)
-  end
-  
   def create_zip
     dir  = Rails.root.join('tmp', 'download').to_s
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
