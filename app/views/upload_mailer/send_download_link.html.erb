@@ -63,8 +63,11 @@
     <h1>Hello <%= @receiver.email_id %></h1>
     <p>
       <% word = @file.total_files > 1 ? "files" : "file" %>
-      <strong><%= @sender.email_id %></strong> has sent you <strong><%= @file.total_files %></strong> <%= word %> through ShareFiles.
-      <br>
+      <strong><%= @sender.email_id %></strong> has sent you <strong><%= @file.total_files %></strong> <%= word %> through ShareFiles.<br>
+      <% if @file.message.present? %>
+        <strong>Message: </strong><%= @file.message.html_safe %><br>
+      <% end %>
+      
       Please click on the link below to download the file:<br>
       <%= link_to "Download", @url, class: "button btn-silder" %>
     </p><br>

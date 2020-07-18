@@ -5,9 +5,10 @@ class UploadsController < ApplicationController
     @file_sender = FileSender.new(sender_id: @sender.try(:id))
   end
   
-  def set_users
+  def set_users_and_message
     @file_sender = FileSender.new(total_files: params[:total_files], total_file_size: params[:total_file_size])
     set_email_ids
+    set_message
     if @file_sender.save
       render json: { id: @file_sender.id }
     else
@@ -83,6 +84,12 @@ class UploadsController < ApplicationController
       unless @file_sender.receiver_id.present?
         @receiver = User.find_or_create_by(email_id: params[:receiver_email])
         @file_sender.update(receiver_id: @receiver.id)
+      end
+    end
+    
+    def set_message
+      if @file_sender.present? && (params[:message]).present?
+        @file_sender.update(message: params[:message])
       end
     end
 end

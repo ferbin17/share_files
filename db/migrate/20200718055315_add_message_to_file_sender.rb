@@ -1,5 +1,5 @@
 class AddMessageToFileSender < ActiveRecord::Migration[6.0]
   def change
-    add_column :file_senders, :messages, :text
+    add_column :file_senders, :message, :text
   end
 end

@@ -1,9 +1,12 @@
 Hello <%= @receiver.email_id %>
 <%= @sender.email_id %> has sent you a file through ShareFiles.
+<% if @file.message.present? %>
+  Message: <%= @file.message.html_safe %>
+<% end %>
 
 Please click on the link below to download the file: 
 <%= @url %>
-Note: This link will be automatically expriy after 7 days.</p>
+Note: This link will be automatically expriy after 7 days.
 
 Warm regards,
 ShareFiles Software Tech

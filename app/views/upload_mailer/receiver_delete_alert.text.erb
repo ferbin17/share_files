@@ -1,6 +1,10 @@
 Hello <%= @receiver.email_id %>
 
 <%= @sender.email_id %> has sent you <%= @file.total_files %> files through ShareFiles which near to its expiry date.
+<% if @file.message.present? %>
+  Message: <%= @file.message.html_safe %>
+<% end %>
+
 The file will be automatically deleted on <%= @file.expiry_date %>
       
 Please click on the link below to download the file: 

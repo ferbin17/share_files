@@ -63,7 +63,10 @@
     <h1>Hello <%= @receiver.email_id %></h1>
     <p>
       <% word = @file.total_files > 1 ? "files" : "file" %>
-      <strong><%= @sender.email_id %></strong> has sent you <strong><%= @file.total_files %></strong> <%= word %> through ShareFiles which near to its expiry date.
+      <strong><%= @sender.email_id %></strong> has sent you <strong><%= @file.total_files %></strong> <%= word %> through ShareFiles which near to its expiry date.<br>
+      <% if @file.message.present? %>
+        <strong>Message: </strong><%= @file.message.html_safe %><br>
+      <% end %>
       The file will be automatically deleted on <strong><%= @file.expiry_date.to_formatted_s(:db) %></strong>.
       <br>
       Please click on the link below to download the file:<br>

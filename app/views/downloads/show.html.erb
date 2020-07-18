@@ -6,6 +6,9 @@
           <div class="card mb-3">
             <div class="card-header bg-light file-stats">
               <h5><%= @uploads.count %> Files</h5>
+              <% if @file_sender.message %>
+                <p><strong>Message: </strong><%= @file_sender.message.html_safe %></p>
+              <% end %>
             </div>
             <div id="file-detail-div" class="card-body">
               <% @uploads.each do |upload| %>

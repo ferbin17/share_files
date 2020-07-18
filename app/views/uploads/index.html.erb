@@ -40,7 +40,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card-footer">
+              <div class="card-footer border-none">
                 <div class="row">
                   <div class="col">
                     <button type="submit" class="submit btn-2 purple-white"><span>Send</span></button>
@@ -173,6 +173,7 @@
     if(files.length < 1) return;
     var sender = $('#SenderEmail').val();
     var receiver = $('#ReceiverEmail').val();
+    var message = $('#MessageTextArea').val();
     if(sender == "" || receiver == ""){
       if($('#SenderEmail').attr("required", "") != "required" || $('#ReceiverEmail').attr("required", "") != "required"){
         $('#SenderEmail').attr("required", "required");
@@ -187,10 +188,10 @@
     })
     $.ajax({
       method: 'post',
-      url: 'uploads/set_users',
+      url: 'uploads/set_users_and_message',
       dataType: 'json',
       data: { sender_email: sender, receiver_email: receiver, total_files: files.length,
-        total_file_size: total_file_size},
+        total_file_size: total_file_size, message: message},
       success: function(res) {
         $('#form-div').hide();
         $('.submit').hide();
@@ -407,6 +408,7 @@
       form.reset();
       $('#progress-circle').hide();
       $('#form-div').show();
+      $('#FileUploader').parent().show();
       $('#file-detail-div').html('');
       $('#progress-percent').removeClass("tick-mark");
       files = [];
@@ -437,9 +439,10 @@
     } else {
       alert('Uncaught Error.\n' + jqXHR.responseText);
     }
+    $('#FileUploader').parent().hide();
     $('.submit').hide();
     $('.cancel').hide();
     $('.ind_cancel').hide();
-    $('.form-reseter').show();
+    $('button.form-reseter').css("display", "block");
   }
 </script>

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :uploads, except: [:new, :edit, :update, :destroy, :show] do 
     collection do 
       post 'chunk_create'
-      post 'set_users'
+      post 'set_users_and_message'
       post 'cancel_upload'
     end
     member do
