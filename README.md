@@ -1,7 +1,10 @@
 # README
 ShareFiles
 ==============
-ShareFiles is a application that let you share files over internet.
+ShareFiles is a application that let you share files over internet.  
+It works on Jquery File Upload and Paperclip.  
+Activejob (Sidekiq) is also used to make things quicker and perform well.  
+### Demo link : [ShareFiles](https://share-files-app.herokuapp.com/)  
 
 ## Requirements/Dependencies
 -----------------
