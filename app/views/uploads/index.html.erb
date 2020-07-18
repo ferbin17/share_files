@@ -1,6 +1,6 @@
-<div class="outer outer-override outer-small">
+<!-- <div class="outer outer-override outer-small">
   <div class="middle middle-small">
-    <div class="inner inner-small">
+    <div class="inner inner-small"> -->
       <div class="form-div">
         <div class="form-group" id="file-detail-holder">
           <div class="card mb-3">
@@ -15,6 +15,10 @@
                   <div class="form-group">
                     <%= email_field_tag :send_to_email, "", {required: true, autocomplete: "off", id: "ReceiverEmail",
                         class:"form-control" , placeholder: "Enter receiver email" } %>
+                  </div>
+                  <div class="form-group">
+                    <%= text_area_tag :message, "", {autocomplete: "off", id: "MessageTextArea",
+                        class:"form-control" , placeholder: "Enter the message" } %>
                   </div>
                   <div class="form-group">
                     <label for="FileUploader" class="uploader-button btn-2 purple-white">upload</label>
@@ -51,9 +55,9 @@
           </div>
         </div>
       </div>
-    </div>
+    <!-- </div>
   </div>
-</div>
+</div> -->
 <script>
   change_active_tab()
   function change_active_tab(){

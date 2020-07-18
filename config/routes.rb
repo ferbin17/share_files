@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: 'welcome#index'
+  root to: 'uploads#index'
   resources :file_senders, except: [:index, :new, :edit, :update, :destroy] do
   end
   resources :uploads, except: [:new, :edit, :update, :destroy, :show] do 

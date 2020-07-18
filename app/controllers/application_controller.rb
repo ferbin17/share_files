@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :not_record_found 
   rescue_from Exception, with: :not_found
   rescue_from ActionController::RoutingError, with: :not_found
-  before_action :find_carousels
+  # before_action :find_carousels
   def raise_not_found
     raise ActionController::RoutingError.new("No route matches #{params[:unmatched_route]}")
   end
